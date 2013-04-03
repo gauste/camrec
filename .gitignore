@@ -1,5 +1,11 @@
 *.py[cod]
 
+# Emacs
+*~
+
+# API key
+api_key
+
 # C extensions
 *.so
 
