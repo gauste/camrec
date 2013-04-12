@@ -58,7 +58,7 @@ def get_photo_info(photo_id):
     get_photos() query.
 
     """
-    
+     
     photo_response = flickr.photos_getInfo(photo_id = str(photo_id))
     
     photo_dict = {}
@@ -86,6 +86,10 @@ def get_photo_info(photo_id):
     return photo_dict
 
 def get_exif_info(photo_id):
+    """Get the EXIF information for a given photo as a dictionary.
+    d['photo_id']: photo_id
+    d[photo"""
+
     print "Getting EXIF info for photo with ID: %s" % (photo_id)
     exif_response = flickr.photos_getExif(photo_id = str(photo_id))
     exif_dict = {'photo_id': photo_id}
@@ -98,23 +102,23 @@ def get_exif_info(photo_id):
 
     return exif_dict
     
-    
 def get_photos_and_exif_info(tags, **kwargs):
+    """Get photos matching a given tag and information about the camera
+    used to take the photo. Discard photos which do not have camera
+    model information.
+
+    """
     photos = get_photos(tags, **kwargs)
-    photos_and_exif = {}
+    photos_and_exif = {} 
+    
     for photo_id in photos: 
         try:
-            exif_info = get_exif_info(photo_id)
+            exif_info = get_exif_info(photo_id) 
             if 'Model' in exif_info:
                 photos_and_exif[photo_id] = photos[photo_id]
-                photos_and_exif[photo_id]['exif'] = exif_info
-        except flickrapi.FlickrError:
-            # Permission denied
+                photos_and_exif[photo_id]['exif'] = exif_info 
+        except flickrapi.FlickrError: 
+            # Permission denied 
             pass
-        
+                
     return photos_and_exif
-        
-
-    
-    
-        
