@@ -122,3 +122,36 @@ def get_photos_and_exif_info(tags, **kwargs):
             pass
                 
     return photos_and_exif
+    
+def get_photo_user_comments(photo_id):
+	"""Get a dictionary of users who commented on a given photo and the comment's text
+	"""
+	commentors = []
+	
+	comments_response = flickr.photos_comments_getList(photo_id = str(photo_id))
+	comments = comments_response.find('comments')
+	for item in comments.iter('comment'):
+		commentor = item.get('author')	
+		commentors.append(commentor)
+		
+	return commentors
+		
+def get_photo_user_favorites(photo_id):
+	"""Get a list of users who favorited a given photo.
+	"""
+	favorites = []
+	
+	favorites_response = flickr.photos_getFavorites(photo_id = str(photo_id), per_page = 50) #50 is the maximum results returned per page
+	for favorite in favorites_response.iter('person'):
+		user_id = favorite.get('nsid')
+		favorites.append(user_id)
+			
+	total_pages = int(favorites_response.find('photo').get('pages'))
+	
+	for i in range(1,total_pages):
+		favorites_response = flickr.photos_getFavorites(photo_id = str(photo_id), page=i, per_page = 50) 		
+		for favorite in favorites_response.iter('person'):
+			user_id = favorite.get('nsid')
+			favorites.append(user_id)
+
+	return favorites
