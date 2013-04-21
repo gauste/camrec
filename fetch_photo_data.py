@@ -78,7 +78,7 @@ def get_photo_info(photo_id):
     photo_dict['description'] = description.text
 
     comments = photo.find('comments')
-    photo_dict['comments'] = comments.text
+    photo_dict['ncomments'] = comments.text
 
     photo_dict['tags'] = { tag.get('id'): {'id': tag.get('id'), 'name': tag.text}
                           for tag in photo.find('tags').iter('tag') }
@@ -101,27 +101,6 @@ def get_exif_info(photo_id):
         exif_dict[label] = value
 
     return exif_dict
-    
-def get_photos_and_exif_info(tags, **kwargs):
-    """Get photos matching a given tag and information about the camera
-    used to take the photo. Discard photos which do not have camera
-    model information.
-
-    """
-    photos = get_photos(tags, **kwargs)
-    photos_and_exif = {} 
-    
-    for photo_id in photos: 
-        try:
-            exif_info = get_exif_info(photo_id) 
-            if 'Model' in exif_info:
-                photos_and_exif[photo_id] = photos[photo_id]
-                photos_and_exif[photo_id]['exif'] = exif_info 
-        except flickrapi.FlickrError: 
-            # Permission denied 
-            pass
-                
-    return photos_and_exif
     
 def get_photo_user_comments(photo_id):
 	"""Get a dictionary of users who commented on a given photo and the comment's text
@@ -155,3 +134,48 @@ def get_photo_user_favorites(photo_id):
 			favorites.append(user_id)
 
 	return favorites
+
+def get_photo_info_full(photo_id):
+    """Get the complete photo information, given the photo ID."""
+
+    # If no camera information is present, return None
+    try:
+        exif_info = get_exif_info(photo_id)
+        if 'Model' not in exif_info:
+            return None
+    except flickrapi.FlickrError:
+        return None
+
+    print "Getting photo info for id: %s" % (photo_id)
+    photo_info = get_photo_info(photo_id)
+    print "Getting comments id: %s" % (photo_id)
+    photo_comments = get_photo_user_comments(photo_id)
+    print "Getting favorites for id: %s" % (photo_id)
+    photo_favorites = get_photo_user_favorites(photo_id)
+    print "Done."
+
+    photo_info_full = photo_info.copy()
+    photo_info_full['exif'] = exif_info
+    photo_info_full['user_comments'] = photo_comments
+    photo_info_full['user_favorites'] = photo_favorites
+
+    return photo_info_full
+
+def find_photos_with_tags(tags, **kwargs):
+    """Given the tags, get a list of photos and the complete information
+    for each photo."""
+
+    photos = get_photos(tags, **kwargs)
+    photo_info = {}
+
+    for photo_id in photos:
+        photo_info_full = get_photo_info_full(photo_id)
+
+        # If valid information is present, keep it
+        # otherwise move to next photo
+        if photo_info_full is not None:
+            photo_info[photo_id] = photo_info_full
+        else:
+            continue
+
+    return photo_info
