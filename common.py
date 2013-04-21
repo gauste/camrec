@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 import flickrapi
 
 def get_api_key(fname):
@@ -11,3 +13,9 @@ def get_flickr(key_fname = 'api_key'):
     flickr = flickrapi.FlickrAPI(api_key)
     return flickr
     
+def default_list_dict():
+    return defaultdict(list)
+
+def default_set_dict():
+    return defaultdict(set)
+
