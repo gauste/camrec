@@ -206,11 +206,11 @@ def get_users_data(photo_info):
         users_data[owner_id]['cameras'].add(camera_model)
         users_data[owner_id]['categories'].add(category)
 
-        for comment_user_id in photo['user_comments'][:100]:
+        for comment_user_id in photo['user_comments']:
             users_data[comment_user_id]['categories'].add(category)
             users_data[comment_user_id]['commented_on'].add(owner_id)
 
-        for fav_user_id in photo['user_favorites'][:100]:
+        for fav_user_id in photo['user_favorites']:
             users_data[fav_user_id]['categories'].add(category)
             users_data[fav_user_id]['fav_on'].add(owner_id)
 
