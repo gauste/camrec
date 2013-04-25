@@ -87,6 +87,16 @@ def make_users_link_matrix(link_map):
 
     return link_matrix
 
+def topic_specific_pagerank(M, S, beta = 0.8):
+    """Run Topic-Specific PageRank, given the adjacency matrix M and the
+    teleport set S. Beta is the probability of following links from a
+    node, and (1 - Beta) is the probability of teleporting from a
+    node.
+
+    """
+    
+    n = M.rows
+
 if __name__ == "__main__":
     f = open('users_wildlife.dat', 'r')
     u = pickle.load(f)
