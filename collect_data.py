@@ -30,7 +30,7 @@ def collect_data(categories, nphotos):
 
     return photo_info, users_data
 
-def load_data(photos_data_fname = "photos_all.data", users_data_fname = "users_all.dat"):
+def load_data(photos_data_fname = "photos_all.dat", users_data_fname = "users_all.dat"):
     """Loads the data from the saved files."""
     f = open(photos_data_fname)
     photo_info = pickle.load(f)
@@ -46,4 +46,5 @@ if __name__ == "__main__":
     categories = ["wildlife", "technology", "people", "nature", "art", "food", "cars", "landscape", "architecture"]
     nphotos = 5
 
-    photo_info, users_data = collect_data(categories, nphotos)
+    #photo_info, users_data = collect_data(categories, nphotos)
+    photo_info, users_data = load_data("photos_wildlife.dat", "users_wildlife.dat")
