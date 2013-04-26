@@ -219,7 +219,7 @@ def find_photos_with_tags(tags, nphotos = 10, **kwargs):
     camera_data = fetch_camera_data.retrieve_data('camera')
 
     while True:
-        print "Photo number: %d" % (i)
+        print "Photo number: %d" % (photo_collected)
         #try:
         photos = get_photos(tags, page = i, per_page = 500, **kwargs)
         #except:

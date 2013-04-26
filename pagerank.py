@@ -211,11 +211,34 @@ def topic_specific_pagerank(M, S, beta = 0.8, state_vector = None):
 
 def run_pagerank(users_data, category, beta):
     oid_nid_map, nid_oid_map, link_map, nid_category_map, category_nid_map = make_users_link_map(users_data)
+    all_maps = {'oid_nid_map': oid_nid_map, 
+                'nid_oid_map': nid_oid_map,
+                'link_map': link_map,
+                'nid_category_map': nid_category_map,
+                'category_nid_map': category_nid_map}
+
     M = make_users_link_matrix(link_map)
     S = category_nid_map[category]
     pagerank = topic_specific_pagerank(M, S, beta)
 
-    return M, S, pagerank
+    return M, all_maps, pagerank
+
+def assign_camera_scores(category, pagerank_vector, users_data, all_maps):
+    camera_scores = defaultdict(float)
+    nid_oid_map = all_maps['nid_oid_map']
+    oid_nid_map = all_maps['oid_nid_map']
+    for nid, pagerank_score in enumerate(pagerank_vector):
+        oid = nid_oid_map[nid]
+        user = users_data[oid]
+        if 'cameras_by_category' in user:
+            if category in user['cameras_by_category']:
+                cameras_in_category = user['cameras_by_category'][category]
+                total_photos = sum(cameras_in_category.values()) * 1.0
+
+                for camera, n_photos in cameras_in_category.iteritems():
+                    camera_scores[camera] += (n_photos / total_photos) * pagerank_score
+        
+    return camera_scores
 
 if __name__ == "__main__":
     f = open('users_wildlife.dat', 'r')
