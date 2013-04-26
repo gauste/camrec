@@ -150,19 +150,20 @@ def topic_specific_pagerank(M, S, beta = 0.8, state_vector = None):
     #
     # In general, for a node j in S, the teleportation contribution is:
     # 
-    # New state[j] += (1 - Beta/|S|) * sum(state) + (Beta/|S|) * sum(dangling_state)
+    # New state[j] += ((1 - Beta)/|S|) * sum(state) + (Beta/|S|) * sum(dangling_state)
     #
     # For a node j not in S, the teleportation contribution is:
     # 
     # New state[j] += 0
 
-    topic_teleport = (1 - beta/n_S)
+    topic_teleport = ((1 - beta)/n_S)
     dangling_teleport = beta/n_S
 
     state_diff = 1e6
     state_maxdiff = 0.00000001
     not_S = set(range(n_total)).difference_update(S)
     M = csr_matrix(M)
+    #print "M = ", M.todense()
     print "Calculating PageRank..."
     iter = 0
     while state_diff > state_maxdiff:
@@ -174,10 +175,13 @@ def topic_specific_pagerank(M, S, beta = 0.8, state_vector = None):
 
         # Contribution of links
         new_state_vector = state_vector * M
-        
+
+        #print "Intermediate state = ", new_state_vector
         # Contribution of teleport
         for j in S:
+            #print "For node %d, adding topic teleport %.4f" % (j, topic_teleport * sum_states)
             new_state_vector[j] += topic_teleport * sum_states
+            #print "For node %d, adding dangling teleport %.4f" % (j, dangling_teleport * sum_dangling_states)
             new_state_vector[j] += dangling_teleport * sum_dangling_states
 
         # Normalize the state vector
