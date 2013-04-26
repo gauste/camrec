@@ -1,4 +1,5 @@
 from common import *
+from itertools import izip
 from scipy.sparse import coo_matrix, csr_matrix, dok_matrix
 import numpy as np
 import cPickle as pickle
@@ -87,20 +88,113 @@ def make_users_link_matrix(link_map):
 
     return link_matrix
 
-def topic_specific_pagerank(M, S, beta = 0.8):
+def topic_specific_pagerank(M, S, beta = 0.8, state_vector = None):
     """Run Topic-Specific PageRank, given the adjacency matrix M and the
     teleport set S. Beta is the probability of following links from a
     node, and (1 - Beta) is the probability of teleporting from a
     node.
 
     """
+    n_total = M.shape[0]        # Total number of users
+    n_S = len(S)                # |S|: Number of users in the given category
+
+    # Set uniform initial state = 1/n for each node
+    print "Generating state vector..."
+    if state_vector is None:
+        state_vector = np.array([1./n_total] * n_total, dtype='float64')
+    print "Done."
+
+    # Normalize the transition matrix
+    print "Scaling transition matrix..."
+    M = dok_matrix(M).astype('float64')
+    nonzero = M.nonzero()
+    nonzero_r, nonzero_c = nonzero[0], nonzero[1]
+    current_r = -1
+
+    # Keep track of the indices of dangling nodes
+    dangling_nodes = set(range(n_total))
+
+    print "n_total = ", n_total
+
+    for r,c in izip(nonzero_r, nonzero_c):
+        # For every new row, get the number of nonzero elements
+        if r != current_r:
+            # This is not a dangling node
+            dangling_nodes.discard(r)
+
+            ones_in_row = M[r,:].nnz
+            current_r = r
+
+        #print "Previous M[%d,%d] = %.4f" % (r,c, M[r,c])
+        #print "Multiplying by:", beta/ones_in_row
+        M[r,c] *= beta/ones_in_row
+        #print "New M[%d,%d] = %.4f" % (r,c, M[r,c])
+
+    # Matrix has been scaled by beta, but dangling nodes remain.
+    # For a dangling node i, the row M[i,:] will have only zeroes.
+    # Leave it as it is. Handle it in the teleportation matrix.
     
-    n = M.rows
+    # For a node j in S:
+    # Teleport[i][j] = (1-Beta)/|S|
+    #
+    # For a node j not in S:
+    # Teleport[i][j] = 0
+    #
+    # For a node j in S, and j is a dangling node:
+    # Teleport[j][k] = 1/|S|, for all k in S
+    #
+
+    # For any node j, the contribution of the links to the state is:
+    #
+    # New state[j] = state * M[:,j] 
+    #
+    # In general, for a node j in S, the teleportation contribution is:
+    # 
+    # New state[j] += (1 - Beta/|S|) * sum(state) + (Beta/|S|) * sum(dangling_state)
+    #
+    # For a node j not in S, the teleportation contribution is:
+    # 
+    # New state[j] += 0
+
+    topic_teleport = (1 - beta/n_S)
+    dangling_teleport = beta/n_S
+
+    state_diff = 1e6
+    state_maxdiff = 0.00000001
+    not_S = set(range(n_total)).difference_update(S)
+    M = csr_matrix(M)
+    print "Calculating PageRank..."
+    iter = 0
+    while state_diff > state_maxdiff:
+        dangling_states = np.array([state_vector[i] for i in dangling_nodes])
+        sum_dangling_states = dangling_states.sum()
+
+        iter += 1
+        sum_states = state_vector.sum()
+
+        # Contribution of links
+        new_state_vector = state_vector * M
+        
+        # Contribution of teleport
+        for j in S:
+            new_state_vector[j] += topic_teleport * sum_states
+            new_state_vector[j] += dangling_teleport * sum_dangling_states
+
+        # Normalize the state vector
+        new_state_vector *= 1./new_state_vector.sum()
+    
+        state_diff = sum(abs(new_state_vector - state_vector))
+        print "Iteration %d: Total change this iteration = %.7f" % (iter, state_diff)
+        state_vector = new_state_vector
+
+    print "Topic-Specific PageRank calculation complete."
+
+    return state_vector
 
 if __name__ == "__main__":
     f = open('users_wildlife.dat', 'r')
-    u = pickle.load(f)
+    users_data = pickle.load(f)
     f.close()
 
-    oid_nid_map, nid_oid_map, link_map, nid_category_map, category_nid_map = make_users_link_map(u)
+    oid_nid_map, nid_oid_map, link_map, nid_category_map, category_nid_map = make_users_link_map(users_data)
     m = make_users_link_matrix(link_map)
