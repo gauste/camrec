@@ -4,6 +4,7 @@
 from common import *
 from fetch_photo_data import *
 import cPickle as pickle
+import os
 
 def collect_data(categories, nphotos):
     """Collects data for `nphotos' number of photos from each category."""
@@ -29,6 +30,46 @@ def collect_data(categories, nphotos):
     f.close()
 
     return photo_info, users_data
+
+def combine_data(dirname = 'data'):
+    """Combines data from all the photos_*_1.dat files into one photo_all_1.dat file."""
+    
+    current_dir = os.getcwd()
+    os.chdir(dirname)
+    photo_info_combined = {}
+    print "Combining photo information..."
+    for fname in os.listdir('.'):
+        print "Fname = ", fname
+        if fname.find('photos_') == -1:
+            continue
+
+        print "File name: ", fname
+        f = open(fname, 'r')
+        photo_info = pickle.load(f)
+        f.close()
+
+        print "Length of photo info = ", len(photo_info)
+
+        for photo_id, photo in photo_info.iteritems():
+            if photo_id not in photo_info_combined:
+                photo_info_combined[photo_id] = photo
+
+    print "Dumping..."
+    os.chdir(current_dir)
+    f = open('photos_all_1.dat', 'wb')
+    pickle.dump(photo_info_combined, f)
+    f.close()
+    print "Done."
+
+    print "Combining user information..."
+    users_data = get_users_data(photo_info_combined)
+    f = open('users_all_1.dat', 'wb')
+    pickle.dump(users_data, f)
+    f.close()
+    print "Done."
+
+
+    return photo_info_combined, users_data
 
 def load_data(photos_data_fname = "photos_all.dat", users_data_fname = "users_all.dat"):
     """Loads the data from the saved files."""

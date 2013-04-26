@@ -97,6 +97,10 @@ def topic_specific_pagerank(M, S, beta = 0.8, state_vector = None):
     """
     n_total = M.shape[0]        # Total number of users
     n_S = len(S)                # |S|: Number of users in the given category
+    
+    if n_S == 0:
+        print "Error: Zero elements in the teleport set."
+        return None
 
     # Set uniform initial state = 1/n for each node
     print "Generating state vector..."
@@ -106,7 +110,13 @@ def topic_specific_pagerank(M, S, beta = 0.8, state_vector = None):
 
     # Normalize the transition matrix
     print "Scaling transition matrix..."
-    M = dok_matrix(M).astype('float64')
+    ones_in_row = {}
+    M = csr_matrix(M).astype('float64')
+    for r in range(n_total):
+        ones_in_row[r] = M[r].nnz
+
+    M = dok_matrix(M)
+    print "Converted to DOK matrix."
     nonzero = M.nonzero()
     nonzero_r, nonzero_c = nonzero[0], nonzero[1]
     current_r = -1
@@ -115,19 +125,21 @@ def topic_specific_pagerank(M, S, beta = 0.8, state_vector = None):
     dangling_nodes = set(range(n_total))
 
     print "Total number of nodes = %d" % (n_total)
+    print "Number of nonzero elements = %d" % (M.nnz)
 
     for r,c in izip(nonzero_r, nonzero_c):
         # For every new row, get the number of nonzero elements
         if r != current_r:
+            #print "New r = ", r
             # This is not a dangling node
             dangling_nodes.discard(r)
 
-            ones_in_row = M[r,:].nnz
+            #ones_in_row = M[r,:].nnz
             current_r = r
 
         #print "Previous M[%d,%d] = %.4f" % (r,c, M[r,c])
         #print "Multiplying by:", beta/ones_in_row
-        M[r,c] *= beta/ones_in_row
+        M[r,c] *= beta/ones_in_row[r]
         #print "New M[%d,%d] = %.4f" % (r,c, M[r,c])
 
     print "Number of dangling nodes = %d" % (len(dangling_nodes))
@@ -196,6 +208,14 @@ def topic_specific_pagerank(M, S, beta = 0.8, state_vector = None):
     print "Topic-Specific PageRank calculation complete."
 
     return state_vector
+
+def run_pagerank(users_data, category, beta):
+    oid_nid_map, nid_oid_map, link_map, nid_category_map, category_nid_map = make_users_link_map(users_data)
+    M = make_users_link_matrix(link_map)
+    S = category_nid_map[category]
+    pagerank = topic_specific_pagerank(M, S, beta)
+
+    return M, S, pagerank
 
 if __name__ == "__main__":
     f = open('users_wildlife.dat', 'r')
