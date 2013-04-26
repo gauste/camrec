@@ -19,3 +19,6 @@ def default_list_dict():
 def default_set_dict():
     return defaultdict(set)
 
+def default_int_dict():
+    return defaultdict(int)
+

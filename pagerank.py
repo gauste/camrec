@@ -114,7 +114,7 @@ def topic_specific_pagerank(M, S, beta = 0.8, state_vector = None):
     # Keep track of the indices of dangling nodes
     dangling_nodes = set(range(n_total))
 
-    print "n_total = ", n_total
+    print "Total number of nodes = %d" % (n_total)
 
     for r,c in izip(nonzero_r, nonzero_c):
         # For every new row, get the number of nonzero elements
@@ -130,6 +130,11 @@ def topic_specific_pagerank(M, S, beta = 0.8, state_vector = None):
         M[r,c] *= beta/ones_in_row
         #print "New M[%d,%d] = %.4f" % (r,c, M[r,c])
 
+    print "Number of dangling nodes = %d" % (len(dangling_nodes))
+
+    # Calculation of Topic-Specific PageRank
+    # ======================================
+    # 
     # Matrix has been scaled by beta, but dangling nodes remain.
     # For a dangling node i, the row M[i,:] will have only zeroes.
     # Leave it as it is. Handle it in the teleportation matrix.
@@ -163,7 +168,7 @@ def topic_specific_pagerank(M, S, beta = 0.8, state_vector = None):
     state_maxdiff = 0.00000001
     not_S = set(range(n_total)).difference_update(S)
     M = csr_matrix(M)
-    #print "M = ", M.todense()
+
     print "Calculating PageRank..."
     iter = 0
     while state_diff > state_maxdiff:
@@ -176,12 +181,9 @@ def topic_specific_pagerank(M, S, beta = 0.8, state_vector = None):
         # Contribution of links
         new_state_vector = state_vector * M
 
-        #print "Intermediate state = ", new_state_vector
         # Contribution of teleport
         for j in S:
-            #print "For node %d, adding topic teleport %.4f" % (j, topic_teleport * sum_states)
             new_state_vector[j] += topic_teleport * sum_states
-            #print "For node %d, adding dangling teleport %.4f" % (j, dangling_teleport * sum_dangling_states)
             new_state_vector[j] += dangling_teleport * sum_dangling_states
 
         # Normalize the state vector

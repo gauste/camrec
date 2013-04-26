@@ -206,6 +206,10 @@ def get_users_data(photo_info):
         users_data[owner_id]['cameras'].add(camera_model)
         users_data[owner_id]['categories'].add(category)
 
+        if 'cameras_by_category' not in users_data[owner_id]:
+            users_data[owner_id]['cameras_by_category'] = defaultdict(default_int_dict)
+        users_data[owner_id]['cameras_by_category'][category][camera_model] += 1
+
         for comment_user_id in photo['user_comments']:
             users_data[comment_user_id]['categories'].add(category)
             users_data[comment_user_id]['commented_on'].add(owner_id)
