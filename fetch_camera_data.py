@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 
 # Modules not in standard library
 from common import *
+import cPickle as pickle
 import flickrapi
 import shelve
 
@@ -79,30 +80,39 @@ def get_camera_models(brands_dict):
     return camera_models_dict
 
 def get_data(filename):
-	#Get all camera brands
-	b = get_brands()
+    #Get all camera brands
+    b = get_brands()
     
-	#Get all models from each of the brands
-	m = get_camera_models(b)
-	 
-	s = shelve.open(filename)
-	try:
-		for camera_name, values in m.items():
-			s[camera_name] = values
-		print len(s)
-	finally:
-		s.close()
+    #Get all models from each of the brands
+    m = get_camera_models(b)
+        
+    #s = shelve.open(filename)
+    f = open(filename, 'wb')
+    pickle.dump(m,f)
+    f.close()
+
+    # try:
+    # 	for camera_name, values in m.items():
+    # 		s[camera_name] = values
+    # 	print len(s)
+    # finally:
+    # 	s.close()
 
 def retrieve_data(filename):
-	s = shelve.open(filename)
-	try:
-		for camera_name in s.keys():
-			print camera_name, s[camera_name]['brand'], s[camera_name]['megapixels'], s[camera_name]['zoom'], s[camera_name]['lcd'], s[camera_name]['memory_type']
-		print len(s)
-	finally:
-		s.close()
+    f = open(filename, 'r')
+    m = pickle.load(f)
+    f.close()
+
+    return m
+    # s = shelve.open(filename)
+    # try:
+    # 	for camera_name in s.keys():
+    # 		print camera_name, s[camera_name]['brand'], s[camera_name]['megapixels'], s[camera_name]['zoom'], s[camera_name]['lcd'], s[camera_name]['memory_type']
+    # 	print len(s)
+    # finally:
+    # 	s.close()
 	
 if __name__ == "__main__":
-	filename = "camera"
-	get_data(filename)
-	retrieve_data(filename)
+    filename = "camera"
+    get_data(filename)
+    m = retrieve_data(filename)

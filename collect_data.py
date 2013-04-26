@@ -68,7 +68,6 @@ def combine_data(dirname = 'data'):
     f.close()
     print "Done."
 
-
     return photo_info_combined, users_data
 
 def load_data(photos_data_fname = "photos_all.dat", users_data_fname = "users_all.dat"):
@@ -88,4 +87,4 @@ if __name__ == "__main__":
     nphotos = 5
 
     #photo_info, users_data = collect_data(categories, nphotos)
-    photo_info, users_data = load_data("photos_wildlife.dat", "users_wildlife.dat")
+    #photo_info, users_data = load_data("photos_wildlife.dat", "users_wildlife.dat")

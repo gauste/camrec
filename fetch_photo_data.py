@@ -2,6 +2,7 @@ from collections import defaultdict
 import xml.etree.ElementTree as ET
 
 from common import *
+import fetch_camera_data
 import flickrapi
 
 flickr = get_flickr()
@@ -55,7 +56,6 @@ def get_photo_info(photo_id):
     d['description']: photo description
     d['comments']: number of comments
     
-    
     The photo is identified by its photo ID, which can be found from a
     get_photos() query.
 
@@ -82,8 +82,12 @@ def get_photo_info(photo_id):
     comments = photo.find('comments')
     photo_dict['ncomments'] = comments.text
 
-    photo_dict['tags'] = { tag.get('id'): {'id': tag.get('id'), 'name': tag.text}
-                          for tag in photo.find('tags').iter('tag') }
+    photo_dict['tags'] = {}
+    for tag in photo.find('tags').iter('tag'):
+        tag_id = tag.get('id')
+        photo_dict[tag_id] = {'id': tag_id, 'name': tag.text}
+
+    #photo_dict['tags'] = { tag.get('id'): {'id': tag.get('id'), 'name': tag.text} for tag in photo.find('tags').iter('tag') }
 
     return photo_dict
 
@@ -137,14 +141,54 @@ def get_photo_user_favorites(photo_id):
 
 	return favorites
 
-def get_photo_info_full(photo_id):
+def get_camera_from_database(exif_info, camera_data):
+    """Returns the camera from the camera database which matches the
+    camera used to take the given photo."""
+
+    try:
+        model = exif_info['Model']
+    except KeyError:
+        return None
+
+    model = model.strip()
+    model_lower = model.lower()
+    make_and_model_lower = None
+
+    if 'Make' in exif_info:
+        make = exif_info['Make'].strip()
+        make_and_model = "%s %s" % (make, model)
+        make_and_model_lower = make_and_model.lower()
+
+    for camera in camera_data:
+        # Exact match
+        camera_lower = camera.lower()
+        if model_lower == camera_lower:
+            exif_info['Model'] = camera
+            return camera
+        # Make + Model match
+        if make_and_model_lower == camera_lower:
+            exif_info['Model'] = camera
+            return camera
+
+    return None
+
+def get_photo_info_full(photo_id, camera_data = None):
+
     """Get the complete photo information, given the photo ID."""
 
     # If no camera information is present, return None
     try:
         exif_info = get_exif_info(photo_id)
-        if 'Model' not in exif_info:
-            return None
+        # If invalid camera, return None
+        if camera_data is not None:
+            print "Checking if camera is valid..."
+            camera = get_camera_from_database(exif_info, camera_data)
+            print "Done."
+            if camera is not None:
+                exif_info['Model'] = camera
+            else:
+                print "No matching camera."
+                return None
     except flickrapi.FlickrError:
         return None
 
@@ -172,14 +216,22 @@ def find_photos_with_tags(tags, nphotos = 10, **kwargs):
     max_photos_per_page = 500
     photos_collected = 0
     i = 1
+    camera_data = fetch_camera_data.retrieve_data('camera')
 
     while True:
-        photos = get_photos(tags, page = i, per_page = 100, **kwargs)
-        for photo_id in photos:
-            photo_info_full = get_photo_info_full(photo_id)
+        #try:
+        photos = get_photos(tags, page = i, per_page = 500, **kwargs)
+        #except:
+        #    continue
 
-            # If valid information is present, keep it
-            # otherwise move to next photo
+        for photo_id in photos:
+            while True:
+                try:
+                    photo_info_full = get_photo_info_full(photo_id, camera_data)
+                    break
+                except:
+                    continue
+
             if photo_info_full is not None:
                 photo_info[photo_id] = photo_info_full
                 photo_info[photo_id]['category'] = tags
