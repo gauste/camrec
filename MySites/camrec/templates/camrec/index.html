@@ -1,0 +1,12 @@
+Welcome to Camera Recommendation System!!
+<br/>
+{% if category_list %}
+	<ul>
+	{% for cat in category_list %}
+		<li><a href="/camrec/category/{{cat}}">{{cat}}</a></li>
+	{% endfor %}
+	</ul>
+{% else %}
+	<p>No categories are available.</p>
+{% endif %}
+
