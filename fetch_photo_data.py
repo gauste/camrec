@@ -219,20 +219,16 @@ def find_photos_with_tags(tags, nphotos = 10, **kwargs):
     camera_data = fetch_camera_data.retrieve_data('camera')
 
     while True:
-
         #try:
         photos = get_photos(tags, page = i, per_page = 500, **kwargs)
         #except:
         #    continue
-
         for photo_id in photos:
-            while True:
-                try:
-                    photo_info_full = get_photo_info_full(photo_id, camera_data)
-                    break
-                except:
-                    continue
-                    print "Photo number: %d" % (photo_collected)
+            try:
+                photo_info_full = get_photo_info_full(photo_id, camera_data)
+            except:
+                continue
+            print "Photo number: %d" % (photos_collected)
             if photo_info_full is not None:
                 photo_info[photo_id] = photo_info_full
                 photo_info[photo_id]['category'] = tags
