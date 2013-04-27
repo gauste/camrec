@@ -1,0 +1,163 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Plot!</title>
+  </head>
+  <body>
+    <script type="text/javascript" src="jquery-2.0.0.js"></script>
+    <script type="text/javascript" src="dist/jquery.jqplot.js"></script>
+    <script type="text/javascript" src="dist/plugins/jqplot.barRenderer.min.js"></script>
+    <script type="text/javascript" src="dist/plugins/jqplot.canvasTextRenderer.min.js"></script>
+    <script type="text/javascript" src="dist/plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
+    <script type="text/javascript" src="dist/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+    <script type="text/javascript" src="dist/plugins/jqplot.pointLabels.min.js"></script>
+
+    <div id="chart1" style="height:400px; width:400px">
+    </div>
+    <div id="chart2" style="height:400px; width:400px">
+    </div>
+    <div id="chart3" style="height:400px; width:400px">
+    </div>
+    <script type="text/javascript">
+      $(document).ready(function(){
+          $.jqplot.config.enablePlugins = true;
+          var s1 = [35, 20, 145, 51, 151, 88, 99, 185, 75, 43];
+          var ticks = ['0.0 - 1.8', '2.0 - 2.5', '2.6 - 3.2', '3.3 - 3.8', '3.9 - 4.3', '4.5 - 5.0', '5.1 - 5.9', '6.3 - 9.0', '9.5 - 14.0', '16.0 - 38.0'];
+
+          plot1 = $.jqplot('chart3', [s1], {
+              // Only animate if we're not using excanvas (not in IE 7 or IE 8)..
+              animate: !$.jqplot.use_excanvas,
+              seriesDefaults:{
+                  renderer:$.jqplot.BarRenderer,
+                  pointLabels: { show: true }
+              },
+              title: {
+                  text: 'Distribution of Apertures',
+                  fontFamily: 'Helvetica'
+                  },
+              axesDefaults: {
+                  tickRenderer: $.jqplot.CanvasAxisTickRenderer ,
+                  tickOptions: {
+                      fontFamily: 'Georgia',
+                      fontSize: '7pt',
+                      angle: -30
+                  },
+                  labelOptions: {
+                      fontFamily: 'Georgia',
+                      fontSize: '7pt',
+                  }
+              },
+              axes: {
+                  xaxis: {
+                      renderer: $.jqplot.CategoryAxisRenderer,
+                      ticks: ticks
+                  }
+              },
+              highlighter: { show: false }
+          });
+          
+          $('#chart3').bind('jqplotDataClick',
+                            function (ev, seriesIndex, pointIndex, data) {
+                                $('#info1').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+                            }
+                           );
+      })
+    </script>
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+          $.jqplot.config.enablePlugins = true;
+          var s1 = [30, 95, 197, 206, 137, 91, 34, 32, 31, 43];
+          var ticks = ['1/8000 - 1/1588', '1/1500 - 1/640', '1/500 - 1/250', '1/200 - 1/100', '1/90 - 1/40', '1/35 - 1/13', '1/10 - 1/2', '3/5 - 3', '16/5 - 13', '15 - 210'];
+
+          //var s1 = [128, 97, 167, 153, 116, 116, 117];
+          //var ticks = ['0.0 mm - 8.5 mm', '8.9 mm - 14.5 mm', '15.0 mm - 23.0 mm', '23.2 mm - 40.0 mm', '43.0 mm - 68.0 mm', '70.0 mm - 125.0 mm', '134.5 mm - 700.0 mm'];
+          // var s1 = [2, 6, 7, 10];
+          // var ticks = ['a', 'b', 'c', 'd'];
+          
+          plot1 = $.jqplot('chart2', [s1], {
+              // Only animate if we're not using excanvas (not in IE 7 or IE 8)..
+              animate: !$.jqplot.use_excanvas,
+              seriesDefaults:{
+                  renderer:$.jqplot.BarRenderer,
+                  pointLabels: { show: true }
+              },
+              title: 'Distribution of Exposures',
+              axesDefaults: {
+                  tickRenderer: $.jqplot.CanvasAxisTickRenderer ,
+                  tickOptions: {
+                      fontFamily: 'Georgia',
+                      fontSize: '7pt',
+                      angle: -30
+                  },
+                  labelOptions: {
+                      fontFamily: 'Georgia',
+                      fontSize: '7pt',
+                  }
+              },
+              axes: {
+                  xaxis: {
+                      renderer: $.jqplot.CategoryAxisRenderer,
+                      ticks: ticks
+                  }
+              },
+              highlighter: { show: false }
+          });
+          
+          $('#chart2').bind('jqplotDataClick',
+                            function (ev, seriesIndex, pointIndex, data) {
+                                $('#info1').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+                            }
+                           );
+      })
+    </script>
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+          $.jqplot.config.enablePlugins = true;
+          var s1 = [93, 64, 70, 144, 102, 74, 101, 63, 75, 108];
+          var ticks = ['0.0 mm - 7.2 mm', '7.3 mm - 10.6 mm', '10.8 mm - 15.0 mm', '15.6 mm - 21.0 mm', '21.5 mm - 28.3 mm', '28.8 mm - 44.0 mm', '45.0 mm - 60.0 mm', '62.0 mm - 86.0 mm', '88.8 mm - 145.0 mm', '150.0 mm - 700.0 mm'];
+
+          //var s1 = [128, 97, 167, 153, 116, 116, 117];
+          //var ticks = ['0.0 mm - 8.5 mm', '8.9 mm - 14.5 mm', '15.0 mm - 23.0 mm', '23.2 mm - 40.0 mm', '43.0 mm - 68.0 mm', '70.0 mm - 125.0 mm', '134.5 mm - 700.0 mm'];
+          // var s1 = [2, 6, 7, 10];
+          // var ticks = ['a', 'b', 'c', 'd'];
+          
+          plot1 = $.jqplot('chart1', [s1], {
+              // Only animate if we're not using excanvas (not in IE 7 or IE 8)..
+              animate: !$.jqplot.use_excanvas,
+              seriesDefaults:{
+                  renderer:$.jqplot.BarRenderer,
+                  pointLabels: { show: true }
+              },
+              title: 'Distribution of Focal Lengths',
+              axesDefaults: {
+                  tickRenderer: $.jqplot.CanvasAxisTickRenderer ,
+                  tickOptions: {
+                      fontFamily: 'Georgia',
+                      fontSize: '7pt',
+                      angle: -30
+                  },
+                  labelOptions: {
+                      fontFamily: 'Georgia',
+                      fontSize: '7pt',
+                  }
+              },
+              axes: {
+                  xaxis: {
+                      renderer: $.jqplot.CategoryAxisRenderer,
+                      ticks: ticks
+                  }
+              },
+              highlighter: { show: false }
+          });
+          
+          $('#chart1').bind('jqplotDataClick',
+                            function (ev, seriesIndex, pointIndex, data) {
+                                $('#info1').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+                            }
+                           );
+      })
+    </script>
+
+  </body>
+</html>

@@ -2,6 +2,7 @@ import datetime
 
 from common import *
 from fetch_photo_data import *
+from fractions import Fraction
 
 def parse_time(photo_info):
     """Returns the time the photo was taken using the date string, or None
@@ -89,3 +90,21 @@ def get_focal_length_plot_data(photos_stats, n_bars = 7):
     
     return bars, ticks
 
+def get_exposure_plot_data(photos_stats, n_bars = 7):
+    exposure_stats = photos_stats['Exposure']
+    numeric_exposure_stats = {Fraction(x): exposure_stats[x] for x in exposure_stats}
+    sorted_exposures = sorted(numeric_exposure_stats.items())
+    
+    bars,ticks = aggregate_plot_data(sorted_exposures, n_bars = n_bars, units = '')
+
+    return bars, ticks
+
+def get_aperture_plot_data(photos_stats, n_bars = 7):
+    aperture_stats = photos_stats['Aperture']
+    numeric_aperture_stats = { float(x.split(' ')[0]):
+                                   aperture_stats[x] for x in aperture_stats }
+    
+    sorted_apertures = sorted(numeric_aperture_stats.items())
+    bars, ticks = aggregate_plot_data(sorted_apertures, n_bars = n_bars, units = '')
+    
+    return bars, ticks
