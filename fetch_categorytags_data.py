@@ -26,19 +26,27 @@ def get_categorytags(category):
     return tags
 
 
-def collect_tags(category):
+def collect_tags(categories):
     """Collects tags for each category."""
 
     tags_info = {}
-    tags_info_category = get_categorytags(category)
-    f = open("tags_%s_1.dat" % (category), 'w')
-    pickle.dump(tags_info_category, f)
+    for category in categories:
+        tags_info_category = get_categorytags(category)
+        for item in tags_info_category:
+	    if (item not in tags_info):
+		tags_info[item] = []
+    	    tags_info[item].append(category)
+        print tags_info
+	print len(tags_info)
+    f = open("tags_of_categoryes.dat", 'w')
+    pickle.dump(tags_info, f)
     f.close()
 
 
+
 if __name__ == "__main__":
-    category = "nature"
-    #category = ["wildlife", "technology", "people", "nature", "art", "food", "cars", "landscape", "architecture"]
-    get_categorytags(category)
-    #collect_tags(category)
+    #category = "nature"
+    categories = ["wildlife", "technology", "people", "nature", "art", "food", "cars", "landscape", "architecture"]
+#    get_categorytags(category)
+    collect_tags(categories)
 
