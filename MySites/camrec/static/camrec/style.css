@@ -1,0 +1,67 @@
+body {
+	width: 960px;
+	font-size: 11pt;
+	font-family: Arial;
+	padding: 0px;
+}
+
+a:link, a:visited, a:hover, a:active {
+	color:blue;
+}
+
+.content {
+	padding: 10px 10px 10px 30px;
+}
+
+.cat_heading {
+	font-family: Arial;
+	font-size: 14pt;
+	font-weight: bold;
+	color: #0A5D8F;
+	text-transform:capitalize;
+}
+
+.cat_list li, .camera_list li {
+	text-transform:capitalize;
+	list-style-type: none;	
+	padding-top:10px;	
+	margin-left:-20px;
+}
+
+.cat_list li img, .camera_list li img {
+	vertical-align:bottom;
+}
+
+.cat_list li img {
+	padding-right:3px;
+}
+
+.cat_list span, .camera_list span {
+	display: inline-block;
+}
+
+.cat_list span {
+	width:100px;
+}
+
+.camera_list ul {
+	margin-left: -20px;
+}
+
+.camera_list .camera_item {
+	width:180px;
+}
+
+.camera_list .photos_row {
+	padding-left:5px;
+}
+
+.camera_list .photo {
+	margin:10px;
+	padding:5px;
+	border:1px solid #c3c3c3;
+}
+
+.camera_list .cam_price {
+	color: orange;
+}

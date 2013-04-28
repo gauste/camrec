@@ -1,12 +1,33 @@
-Welcome to Camera Recommendation System!!
-<br/>
-{% if category_list %}
-	<ul>
-	{% for cat in category_list %}
-		<li><a href="/camrec/category/{{cat}}">{{cat}}</a></li>
-	{% endfor %}
-	</ul>
-{% else %}
-	<p>No categories are available.</p>
-{% endif %}
+<html>
+<head>
+	<title>CamRec - Your camera recommender</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href='{% static "camrec/style.css" %}'>
+</head>
+<body>
+	<div>
+		<a href="/camrec/"><img src='{% static "camrec/CamRec.jpg" %}' alt="CamRec" border="0"/></a>
+	</div>
+	<div class="content">	
+		<p>Browse the following genres for information on the top cameras and more:</p>
+		<div class="cat_list">
+		{% if category_list %}
+			<ul>
+			{% for item in category_list %}
+				<li><img src='{% static "camrec/arrow-th.png" %}' border="0" width="16px" />
+					<span><a href="/camrec/category/{{item.category}}">{{item.category}}</a></span>
+					{{item.cameras}}
+				</li>
+			{% endfor %}
+			</ul>
+		{% else %}
+			<p>No categories are available.</p>
+		{% endif %}
+		</div>
+	</div>
+</body>
+</html>
+
+
 

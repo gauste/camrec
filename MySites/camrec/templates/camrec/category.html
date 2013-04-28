@@ -1,1 +1,45 @@
-Category: {{cat}}
+<html>
+<head>
+	<title>CamRec - Your camera recommender</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href='{% static "camrec/style.css" %}'>
+	<script type="text/javascript" src='{% static "camrec/scripts.js" %}'></script>
+</head>
+<body>
+	<div>
+		<a href="/camrec/"><img src='{% static "camrec/CamRec.jpg" %}' alt="CamRec" border="0"/></a>
+	</div>
+	<div class="content">
+		<div class="cat_heading">Genre: {{category}}</div>
+		<p><a href="#" id="best_cameras" onclick="show_best_cameras();" style="font-weight:bold">Best cameras</a>&nbsp;&nbsp;&nbsp;&nbsp;|| &nbsp;&nbsp;&nbsp;
+		   <a href="#" id="best_settings" onclick="show_best_settings();">Best settings</a>
+		</p>
+		<div id="camera_list" class="camera_list">
+			{% if camera_list %}
+				<ul>
+				{% for item in camera_list %}
+					<li>
+						<span class="camera_item">{{ forloop.counter }}. {{item.camera}}</span>
+						Amazon Price: <span class="cam_price">{{item.price}}</span>
+						<br/>
+						<div class="photos_row">
+						{% for p in item.photos %}
+							<span class="photo"><img src='{{p}}' border="0" width="200px"/></span>
+						{% endfor %}
+						</div>
+					</li>
+				{% endfor %}
+				</ul>
+			{% else %}
+				<p>No cameras are found.</p>
+			{% endif %}
+		</div>	
+		
+		<div id="camera_settings" style="display:none">
+				
+		</div>	
+	</div>
+</body>
+</html>
+
