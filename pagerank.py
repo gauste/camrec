@@ -483,5 +483,3 @@ if __name__ == "__main__":
     f = open('users_all_1.dat', 'r')
     users_data = pickle.load(f)
     f.close()
-
-    #run_and_save_pagerank_multiple_topics(users_data, beta = 0.5)
