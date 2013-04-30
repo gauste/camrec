@@ -19,7 +19,7 @@ def index(request):
 		return HttpResponseRedirect('category/' + query_string) 
 
 	elif request.method == 'GET':
-                top_cameras = get_top_cameras(n = 2)
+                top_cameras = get_top_cameras(n = 3)
                 top_cameras_dict = [{'category':cat, 'cameras': ', '.join([camera[0] for camera in  top_cameras[cat]])} for cat in top_cameras]
                 top_cameras_dict = sorted(top_cameras_dict, key = lambda x: x['category'])
 		categories = [{'category':'architecture','cameras':'Nikon D600'}, 

@@ -31,19 +31,23 @@
 			<fieldset>
 				<legend>Browse by genre</legend>
 					{% if category_list %}
-					<ul>
-						<li><span class="cat_list_header_1">Genres</span>
-							<span class="cat_list_header_2">Top 3 cameras</span></li>
+					<p>Click on a genre name to see a list of top cameras and settings.</p>
+					<table class="cat_list_table" cellpadding="2">
+						<tr class="cat_list_header">
+							<td>Genres</td>
+							<td>Top 3 cameras</td>
+						</tr>
 						{% for item in category_list %}
-						<li><img src='{% static "camrec/arrow-th.png" %}' border="0" width="16px" />
-							<span class="cat_list_item"><a href="/camrec/category/{{item.category}}">{{item.category}}</a></span>
-							{{item.cameras}}
-						</li>
+						<tr>
+							<td class="col1" valign="top"><img src='{% static "camrec/arrow-th.png" %}' border="0" width="16px" />
+								<a href="/camrec/category/{{item.category}}">{{item.category}}</a></td>
+							<td>{{item.cameras}}</td>
+						</tr>
 						{% endfor %}
-					</ul>
+					</table>	
 					{% else %}
-						<p>No categories are available.</p>
-					{% endif %}				
+						<p>No categories are available.</p>	
+					{% endif %}	
 			</fieldset>
 		</div>
 		
