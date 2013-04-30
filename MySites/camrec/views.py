@@ -82,8 +82,12 @@ def category(request, cat):
 	night_exposureData, night_exposureTicks = get_exposure_plot_data(night_stats)
 	night_focalLengthData, night_focalLengthTicks = get_focal_length_plot_data(night_stats)
 
-	#apertureData = [35, 20, 145, 51, 151, 88, 99, 185, 75, 43];
-	#apertureTicks = ['0.0 - 1.8', '2.0 - 2.5', '2.6 - 3.2', '3.3 - 3.8', '3.9 - 4.3', '4.5 - 5.0', '5.1 - 5.9', '6.3 - 9.0', '9.5 - 14.0', '16.0 - 38.0'];
+	if len(q) > 1:
+		cat = ''
+		for category in q:
+			if float(q[category]) > 0:
+				cat = cat + category + ':' + q[category] + ' '
+	
 	context = {'category':cat, 'camera_list':cameras,
                    'night_apertureData':night_apertureData,
                    'night_apertureTicks':night_apertureTicks,
