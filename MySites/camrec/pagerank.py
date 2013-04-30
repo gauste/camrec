@@ -463,22 +463,6 @@ def aggregate_camera_scores():
     os.chdir(current_dir)
     return camera_scores_combined
 
-def weighted_camera_scores(combined_camera_scores, **kwargs):
-    """Calculates the weighted camera scores. The keyword arguments should
-    be of the form category = weight."""
-
-    weighted_camera_scores = defaultdict(float)
-    for category in kwargs:
-        if category not in combined_camera_scores:
-            return None
-        
-        weight = kwargs[category]
-        for camera, camera_score in combined_camera_scores[category].iteritems():
-            weighted_camera_scores[camera] += weight * camera_score
-
-    sorted_camera_scores = sorted(weighted_camera_scores.items(), key = lambda x: x[1], reverse = True)
-    return sorted_camera_scores
-
 if __name__ == "__main__":
     f = open('users_all_1.dat', 'r')
     users_data = pickle.load(f)

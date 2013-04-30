@@ -15,13 +15,13 @@ def index(request):
                 for category in category_names:
                         query_string += '%s=%s&' % (category, category_weights[category])
                 query_string = query_string[:-1]
+
 		return HttpResponseRedirect('category/' + query_string) 
 
 	elif request.method == 'GET':
                 top_cameras = get_top_cameras(n = 2)
                 top_cameras_dict = [{'category':cat, 'cameras': ', '.join([camera[0] for camera in  top_cameras[cat]])} for cat in top_cameras]
                 top_cameras_dict = sorted(top_cameras_dict, key = lambda x: x['category'])
-
 		categories = [{'category':'architecture','cameras':'Nikon D600'}, 
 					  {'category':'art','cameras':'Powershot G3'},
 					  {'category':'car','cameras':'Powershot G3'},
@@ -39,7 +39,31 @@ def index(request):
 
 def category(request, cat):
 	q = QueryDict(cat)
-	
+	f = open('cameras', 'r')
+        camera_info = pickle.load(f)
+        f.close()
+
+        all_zero = True
+        if len(q) != 1:
+                for category in q:
+                        try:
+                                weight = int(q[category])
+                                if weight != 0:
+                                        all_zero = False
+                        except:
+                                continue
+        else:
+                all_zero = False
+                category_weights = {q.keys()[0]: 1}
+
+        if all_zero:
+                return HttpResponseRedirect('/camrec/')
+
+        if len(q) > 1:
+                category_weights = {category: float(q[category]) for category in q}
+
+        top_cameras = get_top_cameras(n=100)
+        top_cameras = weighted_camera_scores(top_cameras, **category_weights)
 	cameras = [{'camera':'Powershot G3', 'price': '$300', 'photos':['http://farm2.static.flickr.com/1103/567229075_2cf8456f01_m.jpg', 'http://farm2.static.flickr.com/1103/567229075_2cf8456f01_m.jpg', 'http://farm2.static.flickr.com/1103/567229075_2cf8456f01_m.jpg']},
 			   {'camera':'Nikon D600', 'price': '$1200', 'photos':['http://farm2.static.flickr.com/1103/567229075_2cf8456f01_m.jpg']},
 			   {'camera':'Canon Mark 5D', 'price': '$2500', 'photos':['http://farm2.static.flickr.com/1103/567229075_2cf8456f01_m.jpg']},
@@ -47,10 +71,7 @@ def category(request, cat):
 			   {'camera':'Nikon D90', 'price': '$800', 'photos':''},
 				]
 
-        if len(q) == 1:
-                category_weights = {q.keys()[0]: 1}
-        else:
-                category_weights = {category: float(q[category]) for category in q}
+        cameras = [{'camera': top_cameras[i][0], 'price': '%s' % (top_cameras[i][1]), 'photos':[]} for i in range(len(top_cameras))]
 
         category_photo_data = load_category_photo_data()
         day_stats = analyze_photos(category_photo_data, time_of_day = "day", **category_weights)
