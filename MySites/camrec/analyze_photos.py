@@ -86,15 +86,23 @@ def analyze_photos(category_photo_info, **kwargs):
 
     photos_stats = defaultdict(default_float_dict)
     total_weight = 0.0
-    for category in kwargs:
-        total_weight += kwargs[category]
+    for category in kwargs.keys():
+        weight = kwargs[category]
+        if weight <= 0.001:
+            del kwargs[category]
+            continue
+        print "category = ", category, " weight = ", weight
+        total_weight += weight
 
     for category in kwargs:
         weight = kwargs[category] * 1.0 / total_weight
+        print "category = %s, org weight = %s, total weight = %s, new weight = %s" % (category, kwargs[category], total_weight, weight)
         for photo in category_photo_info[category]:
             for key, value in photo.iteritems():
                 photos_stats[key][value] += weight
                 
+        print photos_stats['Aperture']
+
     return photos_stats
 
 def aggregate_plot_data(data, n_bars = 6, units = ''):
@@ -132,7 +140,7 @@ def aggregate_plot_data(data, n_bars = 6, units = ''):
 
 def get_focal_length_plot_data(photos_stats, n_bars = 7):
     focal_length_stats = photos_stats['Focal Length']
-    numeric_focal_length_stats = { float(x.split(' ')[0]):
+    numeric_focal_length_stats = { float(Fraction(x.split(' ')[0])):
                                    int(focal_length_stats[x]) for x in focal_length_stats }
     
     sorted_focal_lengths = sorted(numeric_focal_length_stats.items())

@@ -44,12 +44,18 @@ def category(request, cat):
 				]
 
 
-        category_weights = {category: float(q[category][0]) for category in q}
+        if len(q) == 1:
+                category_weights = {q.keys()[0]: 1}
+        else:
+                category_weights = {category: float(q[category]) for category in q}
+
         category_photo_data = load_category_photo_data()
         photos_stats = analyze_photos(category_photo_data, **category_weights)
-        print photos_stats['Aperture']
         apertureData, apertureTicks = get_aperture_plot_data(photos_stats)
+        exposureData, exposureTicks = get_exposure_plot_data(photos_stats)
+        focalLengthData, focalLengthTicks = get_focal_length_plot_data(photos_stats)
+
 	#apertureData = [35, 20, 145, 51, 151, 88, 99, 185, 75, 43];
 	#apertureTicks = ['0.0 - 1.8', '2.0 - 2.5', '2.6 - 3.2', '3.3 - 3.8', '3.9 - 4.3', '4.5 - 5.0', '5.1 - 5.9', '6.3 - 9.0', '9.5 - 14.0', '16.0 - 38.0'];
-	context = {'category':cat, 'camera_list':cameras, 'apertureData':apertureData, 'apertureTicks':apertureTicks}
+	context = {'category':cat, 'camera_list':cameras, 'apertureData':apertureData, 'apertureTicks':apertureTicks, 'focalLengthData':focalLengthData, 'focalLengthTicks': focalLengthTicks, 'exposureData': exposureData, 'exposureTicks': exposureTicks}
 	return render(request, 'camrec/category.html', context)
