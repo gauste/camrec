@@ -67,7 +67,10 @@ def category(request, cat):
 	top_camera_prices = []
 	for i in range(len(top_cameras)):
 		camera_name = top_cameras[i][0]
-		top_camera_prices.append(camera_info[camera_name]['price'])
+		if 'price' in camera_info[camera_name]:
+			top_camera_prices.append(camera_info[camera_name]['price'])
+		else:
+			top_camera_prices.append('N/A')
 	
 	cameras = [{'camera': top_cameras[i][0], 'price': '%s' % (top_camera_prices[i]), 'photos':[]} for i in range(len(top_cameras))]
 

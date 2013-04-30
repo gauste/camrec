@@ -131,3 +131,18 @@ legend {
 	width:600px;
 }
 
+#settings_table
+{
+	width:1000px;
+	text-align: center;
+}
+
+#settings_table tr
+{
+	padding:20px;
+}
+
+#settings_table td
+{
+	width:50%;
+}
