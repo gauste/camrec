@@ -1,5 +1,5 @@
 body {
-	width: 960px;
+	width: 800px;
 	font-size: 11pt;
 	font-family: Arial;
 	padding: 0px;
@@ -10,15 +10,21 @@ a:link, a:visited, a:hover, a:active {
 }
 
 .content {
-	padding: 10px 10px 10px 30px;
+	padding: 10px 10px 10px 20px;
 }
 
 /* Index page */
+.cat_list {
+	width:500px;
+	float:left;
+/* 	border: 1px solid #111; */
+}
+
 .cat_list li, .camera_list li {
 	text-transform:capitalize;
 	list-style-type: none;	
 	padding-top:10px;	
-	margin-left:-20px;
+	margin-left:-30px;
 }
 
 .cat_list li img, .camera_list li img {
@@ -39,12 +45,14 @@ a:link, a:visited, a:hover, a:active {
 
 .cat_slider {
 	text-transform:capitalize;
-	padding-bottom:10px;
+	font-size:10pt;
+	font-family:Times;
+	padding-bottom:8px;
 }
 
 .cat_slider input {
 	vertical-align:baseline;
-	padding-bottom:5px;
+	padding-bottom:3px;
 }
 
 .cat_slider_label {
@@ -55,11 +63,26 @@ a:link, a:visited, a:hover, a:active {
 }
 
 .slider {
-	width:300px;
+	width:250px;
+}
+
+.weighted_cat_list {
+	width:250px;
+	float:right;
+	padding-bottom:20px;
+}
+
+.weight_cat_div {
+	padding:8px 10px 10px 10px;
 }
 
 .weighted_cat_list_submitted {
-
+	background:#0A5D8F;
+	color:#fff;
+	border: 1px solid #333;
+	width:100px;
+	padding:2px;
+	float:right;
 }
 
 /* Category page */
@@ -95,6 +118,6 @@ a:link, a:visited, a:hover, a:active {
 
 .camera_settings_chart {
 	height:400px; 
-	width:400px;
+	width:600px;
 }
 

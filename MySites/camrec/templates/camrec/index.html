@@ -26,37 +26,45 @@
 	<div>
 		<a href="/camrec/"><img src='{% static "camrec/CamRec.jpg" %}' alt="CamRec" border="0"/></a>
 	</div>
-	<div class="content">	
-		<div class="weighted_cat_list">
-			{% if category_list %}
-				{% for item in category_list %}
-				<div class="cat_slider">
-					{{item.category}}: <input type="text" name="{{item.category}}_amount" class="cat_slider_label"/>
-					<div id="{{item.category}}_slider" class="slider"></div>
-				</div>	
-				{% endfor %}	
-			{% else %}
-				<p>No categories are available.</p>	
-			{% endif %}
-			<input type="submit" value="Submit" class="weighted_cat_list_submitted"/>
+	<div class="content">		
+		<div class="cat_list">
+			<fieldset>
+				<legend>Browse by genre</legend>
+				{% if category_list %}
+					<ul>
+					{% for item in category_list %}
+						<li><img src='{% static "camrec/arrow-th.png" %}' border="0" width="16px" />
+							<span><a href="/camrec/category/{{item.category}}">{{item.category}}</a></span>
+							{{item.cameras}}
+						</li>
+					{% endfor %}
+					</ul>
+				{% else %}
+					<p>No categories are available.</p>
+				{% endif %}				
+			</fieldset>
 		</div>
 		
-		<p>Browse the following genres for information on the top cameras and more:</p>
-		<div class="cat_list">
-			{% if category_list %}
-				<ul>
-				{% for item in category_list %}
-					<li><img src='{% static "camrec/arrow-th.png" %}' border="0" width="16px" />
-						<span><a href="/camrec/category/{{item.category}}">{{item.category}}</a></span>
-						{{item.cameras}}
-					</li>
-				{% endfor %}
-				</ul>
-			{% else %}
-				<p>No categories are available.</p>
-			{% endif %}
+		<div class="weighted_cat_list">
+			<fieldset>
+				<legend>Pick your genre</legend>	
+				<div class="weight_cat_div">			
+					{% if category_list %}
+						{% for item in category_list %}
+						<div class="cat_slider">
+							{{item.category}}: <input type="text" name="{{item.category}}_amount" class="cat_slider_label"/>
+							<div id="{{item.category}}_slider" class="slider"></div>
+						</div>	
+						{% endfor %}	
+					{% else %}
+						<p>No categories are available.</p>	
+					{% endif %}
+					<input type="submit" value="Submit" class="weighted_cat_list_submitted"/>
+				</div>
+			</fieldset>
 		</div>
 	</div>
+	<br/><br/><br/>
 </form>
 </body>
 </html>
