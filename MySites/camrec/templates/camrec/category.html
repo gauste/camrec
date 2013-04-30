@@ -36,7 +36,7 @@
 						<br/>
 						<div class="photos_row">
 						{% for p in item.photos %}
-							<span class="photo"><img src='{{p}}' border="0" width="200px"/></span>
+							<span class="photo"><a href='http://flickr.com/photo.gne?id={{p.id}}' target='_blank'><img src='{{p.source}}' border="0" width="200px"/></a></span>
 						{% endfor %}
 						</div>
 					</li>

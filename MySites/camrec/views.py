@@ -73,7 +73,7 @@ def category(request, cat):
 		else:
 			top_camera_prices.append('N/A')
 	
-        f = open('interface_photos.dat', 'r')
+        f = open('interface_photos1.dat', 'r')
         interface_photos = pickle.load(f)
         # Convert to {category: {camera: photos, ...}, ...}
         f.close()
