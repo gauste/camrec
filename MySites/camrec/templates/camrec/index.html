@@ -30,18 +30,20 @@
 		<div class="cat_list">
 			<fieldset>
 				<legend>Browse by genre</legend>
-				{% if category_list %}
+					{% if category_list %}
 					<ul>
-					{% for item in category_list %}
+						<li><span class="cat_list_header_1">Genres</span>
+							<span class="cat_list_header_2">Top 3 cameras</span></li>
+						{% for item in category_list %}
 						<li><img src='{% static "camrec/arrow-th.png" %}' border="0" width="16px" />
-							<span><a href="/camrec/category/{{item.category}}">{{item.category}}</a></span>
+							<span class="cat_list_item"><a href="/camrec/category/{{item.category}}">{{item.category}}</a></span>
 							{{item.cameras}}
 						</li>
-					{% endfor %}
+						{% endfor %}
 					</ul>
-				{% else %}
-					<p>No categories are available.</p>
-				{% endif %}				
+					{% else %}
+						<p>No categories are available.</p>
+					{% endif %}				
 			</fieldset>
 		</div>
 		

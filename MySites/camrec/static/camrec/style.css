@@ -13,11 +13,29 @@ a:link, a:visited, a:hover, a:active {
 	padding: 10px 10px 10px 20px;
 }
 
+legend {
+	font-family: Tahoma;
+}
+
 /* Index page */
 .cat_list {
 	width:500px;
 	float:left;
 /* 	border: 1px solid #111; */
+}
+
+.cat_list_header_1 {
+	width:200px;
+	padding-left:20px;
+	color:0A5D8F;
+	display: inline-block;
+	font-family:Tahoma;
+}
+
+.cat_list_header_2 {
+	width:400px;
+	color:0A5D8F;
+	font-family:Tahoma;
 }
 
 .cat_list li, .camera_list li {
@@ -35,7 +53,7 @@ a:link, a:visited, a:hover, a:active {
 	padding-right:3px;
 }
 
-.cat_list span, .camera_list span {
+.cat_list .cat_list_item, .camera_list span {
 	display: inline-block;
 }
 
@@ -46,7 +64,7 @@ a:link, a:visited, a:hover, a:active {
 .cat_slider {
 	text-transform:capitalize;
 	font-size:10pt;
-	font-family:Times;
+	font-family:Arial;
 	padding-bottom:8px;
 }
 
