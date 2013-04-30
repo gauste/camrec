@@ -46,21 +46,56 @@
 				<p>No cameras are found.</p>
 			{% endif %}
 		</div>	
-		
+
+                <style>
+                  #settings_table
+                  {
+                  width:1000px;
+                  text-align: center;
+                  }
+
+                  #settings_table tr
+                  {
+                  padding:20px;
+                  }
+
+                  #settings_table td
+                  {
+                  }
+
+                </style>
 		<div id="camera_settings">
-			<div id="chart1" class="camera_settings_chart"></div>
-			<div id="chart2" class="camera_settings_chart"></div>
-			<div id="chart3" class="camera_settings_chart"></div>			
-		</div>	
+                  <hr width="1000px" />
+		  <table id="settings_table">
+                    <tr align="center"><td><b>Day Photos</b></td><td><b>Night Photos</b></td></tr>
+                    
+                    <tr>
+                      <td><div id="day_chart1" class="camera_settings_day_chart"></div></td>
+                      <td><div id="night_chart1" class="camera_settings_night_chart"></div></td>
+                    </tr>
+
+                    <tr>
+		      <td><div id="day_chart2" class="camera_settings_day_chart"></div></td>
+		      <td><div id="night_chart2" class="camera_settings_night_chart"></div></td>
+                    </tr>
+
+                    <tr>
+		      <td><div id="day_chart3" class="camera_settings_day_chart"></div></td>
+		      <td><div id="night_chart3" class="camera_settings_night_chart"></div></td>
+                    </tr>
+
+                  </table>	
+                  <hr width="1000px"/>
+		</div>
 	</div>
 	
     <script type="text/javascript">
       $(document).ready(function(){
           $.jqplot.config.enablePlugins = true;
-          var s1 = {{apertureData|safe}};
-          var ticks = {{apertureTicks|safe}}; 
+          var s1 = {{day_apertureData|safe}};
+          var ticks = {{day_apertureTicks|safe}}; 
 
-          plot1 = $.jqplot('chart3', [s1], {
+          plot1 = $.jqplot('day_chart3', [s1], {
               // Only animate if we're not using excanvas (not in IE 7 or IE 8)..
               animate: !$.jqplot.use_excanvas,
               seriesDefaults:{
@@ -92,7 +127,7 @@
               highlighter: { show: false }
           });
           
-          $('#chart3').bind('jqplotDataClick',
+          $('#day_chart3').bind('jqplotDataClick',
 			function (ev, seriesIndex, pointIndex, data) {
 				$('#info1').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
 			}
@@ -103,10 +138,10 @@
     <script type="text/javascript">
       $(document).ready(function(){
           $.jqplot.config.enablePlugins = true;
-          var s1 = {{exposureData|safe}};
-          var ticks = {{exposureTicks|safe}};
+          var s1 = {{day_exposureData|safe}};
+          var ticks = {{day_exposureTicks|safe}};
           
-          plot1 = $.jqplot('chart2', [s1], {
+          plot1 = $.jqplot('day_chart2', [s1], {
               // Only animate if we're not using excanvas (not in IE 7 or IE 8)..
               animate: !$.jqplot.use_excanvas,
               seriesDefaults:{
@@ -135,7 +170,7 @@
               highlighter: { show: false }
           });
           
-          $('#chart2').bind('jqplotDataClick',
+          $('#day_chart2').bind('jqplotDataClick',
 			function (ev, seriesIndex, pointIndex, data) {
 				$('#info1').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
 			}
@@ -146,10 +181,10 @@
     <script type="text/javascript">
       $(document).ready(function(){
           $.jqplot.config.enablePlugins = true;
-          var s1 = {{focalLengthData|safe}};
-          var ticks = {{focalLengthTicks|safe}};
+          var s1 = {{day_focalLengthData|safe}};
+          var ticks = {{day_focalLengthTicks|safe}};
           
-          plot1 = $.jqplot('chart1', [s1], {
+          plot1 = $.jqplot('day_chart1', [s1], {
               // Only animate if we're not using excanvas (not in IE 7 or IE 8)..
               animate: !$.jqplot.use_excanvas,
               seriesDefaults:{
@@ -178,7 +213,7 @@
               highlighter: { show: false }
           });
           
-          $('#chart1').bind('jqplotDataClick',
+          $('#day_chart1').bind('jqplotDataClick',
 			function (ev, seriesIndex, pointIndex, data) {
 				$('#info1').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
 			}
@@ -186,6 +221,138 @@
       })
     </script>
     
+    <script type="text/javascript">
+      $(document).ready(function(){
+          $.jqplot.config.enablePlugins = true;
+          var s1 = {{night_apertureData|safe}};
+          var ticks = {{night_apertureTicks|safe}}; 
+
+          plot1 = $.jqplot('night_chart3', [s1], {
+              // Only animate if we're not using excanvas (not in IE 7 or IE 8)..
+              animate: !$.jqplot.use_excanvas,
+              seriesDefaults:{
+                  renderer:$.jqplot.BarRenderer,
+                  pointLabels: { show: true }
+              },
+              title: {
+                  text: 'Distribution of Apertures',
+                  fontFamily: 'Helvetica'
+                  },
+              axesDefaults: {
+                  tickRenderer: $.jqplot.CanvasAxisTickRenderer ,
+                  tickOptions: {
+                      fontFamily: 'Georgia',
+                      fontSize: '7pt',
+                      angle: -30
+                  },
+                  labelOptions: {
+                      fontFamily: 'Georgia',
+                      fontSize: '7pt',
+                  }
+              },
+              axes: {
+                  xaxis: {
+                      renderer: $.jqplot.CategoryAxisRenderer,
+                      ticks: ticks
+                  }
+              },
+              highlighter: { show: false }
+          });
+          
+          $('#night_chart3').bind('jqplotDataClick',
+			function (ev, seriesIndex, pointIndex, data) {
+				$('#info1').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+			}
+		   );
+      })
+    </script>
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+          $.jqplot.config.enablePlugins = true;
+          var s1 = {{night_exposureData|safe}};
+          var ticks = {{night_exposureTicks|safe}};
+          
+          plot1 = $.jqplot('night_chart2', [s1], {
+              // Only animate if we're not using excanvas (not in IE 7 or IE 8)..
+              animate: !$.jqplot.use_excanvas,
+              seriesDefaults:{
+                  renderer:$.jqplot.BarRenderer,
+                  pointLabels: { show: true }
+              },
+              title: 'Distribution of Exposures',
+              axesDefaults: {
+                  tickRenderer: $.jqplot.CanvasAxisTickRenderer ,
+                  tickOptions: {
+                      fontFamily: 'Georgia',
+                      fontSize: '7pt',
+                      angle: -30
+                  },
+                  labelOptions: {
+                      fontFamily: 'Georgia',
+                      fontSize: '7pt',
+                  }
+              },
+              axes: {
+                  xaxis: {
+                      renderer: $.jqplot.CategoryAxisRenderer,
+                      ticks: ticks
+                  }
+              },
+              highlighter: { show: false }
+          });
+          
+          $('#night_chart2').bind('jqplotDataClick',
+			function (ev, seriesIndex, pointIndex, data) {
+				$('#info1').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+			}
+		   );
+      })
+    </script>
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+          $.jqplot.config.enablePlugins = true;
+          var s1 = {{night_focalLengthData|safe}};
+          var ticks = {{night_focalLengthTicks|safe}};
+          
+          plot1 = $.jqplot('night_chart1', [s1], {
+              // Only animate if we're not using excanvas (not in IE 7 or IE 8)..
+              animate: !$.jqplot.use_excanvas,
+              seriesDefaults:{
+                  renderer:$.jqplot.BarRenderer,
+                  pointLabels: { show: true }
+              },
+              title: 'Distribution of Focal Lengths',
+              axesDefaults: {
+                  tickRenderer: $.jqplot.CanvasAxisTickRenderer ,
+                  tickOptions: {
+                      fontFamily: 'Georgia',
+                      fontSize: '7pt',
+                      angle: -30
+                  },
+                  labelOptions: {
+                      fontFamily: 'Georgia',
+                      fontSize: '7pt',
+                  }
+              },
+              axes: {
+                  xaxis: {
+                      renderer: $.jqplot.CategoryAxisRenderer,
+                      ticks: ticks
+                  }
+              },
+              highlighter: { show: false }
+          });
+          
+          $('#night_chart1').bind('jqplotDataClick',
+			function (ev, seriesIndex, pointIndex, data) {
+				$('#info1').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+			}
+		   );
+      })
+    </script>
+
     <script type="text/javascript">
     	$(document).ready(function(){
     		show_best_cameras();

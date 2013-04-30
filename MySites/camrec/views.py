@@ -1,23 +1,27 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, QueryDict
 from analyze_photos import *
+from interface import *
 
 def index(request):
 	if request.method == 'POST':
-		architecture = request.POST.get('architecture_amount')
-		art = request.POST.get('art_amount')
-		car = request.POST.get('car_amount')
-		cat = request.POST.get('cat_amount')
-		food = request.POST.get('food_amount')
-		landscape = request.POST.get('landscape_amount')
-		nature = request.POST.get('nature_amount')
-		people = request.POST.get('people_amount')
-		pet = request.POST.get('pet_amount')
-		technology = request.POST.get('technology_amount')
-		wildlife = request.POST.get('wildlife_amount')
-		query_string = 'architecture='+architecture+'&art='+art+'&car='+car+'&cat='+cat+'&food='+food+'&landscape='+landscape+'&nature='+nature+'&people='+people+'&pet='+pet+'&technology='+technology+'&wildlife='+wildlife
+                top_cameras = get_top_cameras(n=1)
+                category_names = sorted(top_cameras.keys())
+                category_weights = {}
+                for category in category_names:
+                        category_weights[category] = request.POST.get('%s_amount' % (category))
+
+                query_string = ''
+                for category in category_names:
+                        query_string += '%s=%s&' % (category, category_weights[category])
+                query_string = query_string[:-1]
 		return HttpResponseRedirect('category/' + query_string) 
+
 	elif request.method == 'GET':
+                top_cameras = get_top_cameras(n = 2)
+                top_cameras_dict = [{'category':cat, 'cameras': ', '.join([camera[0] for camera in  top_cameras[cat]])} for cat in top_cameras]
+                top_cameras_dict = sorted(top_cameras_dict, key = lambda x: x['category'])
+
 		categories = [{'category':'architecture','cameras':'Nikon D600'}, 
 					  {'category':'art','cameras':'Powershot G3'},
 					  {'category':'car','cameras':'Powershot G3'},
@@ -30,7 +34,7 @@ def index(request):
 					  {'category':'technology','cameras':'Powershot G3'},
 					  {'category':'wildlife','cameras':'Canon Mark 5D'}
 					  ]
-		context = {'category_list': categories}
+		context = {'category_list': top_cameras_dict}
 		return render(request, 'camrec/index.html', context) 
 
 def category(request, cat):
@@ -43,19 +47,36 @@ def category(request, cat):
 			   {'camera':'Nikon D90', 'price': '$800', 'photos':''},
 				]
 
-
         if len(q) == 1:
                 category_weights = {q.keys()[0]: 1}
         else:
                 category_weights = {category: float(q[category]) for category in q}
 
         category_photo_data = load_category_photo_data()
-        photos_stats = analyze_photos(category_photo_data, **category_weights)
-        apertureData, apertureTicks = get_aperture_plot_data(photos_stats)
-        exposureData, exposureTicks = get_exposure_plot_data(photos_stats)
-        focalLengthData, focalLengthTicks = get_focal_length_plot_data(photos_stats)
+        day_stats = analyze_photos(category_photo_data, time_of_day = "day", **category_weights)
+        day_apertureData, day_apertureTicks = get_aperture_plot_data(day_stats)
+        day_exposureData, day_exposureTicks = get_exposure_plot_data(day_stats)
+        day_focalLengthData, day_focalLengthTicks = get_focal_length_plot_data(day_stats)
+
+        night_stats = analyze_photos(category_photo_data, time_of_day = "night", **category_weights)
+        night_apertureData, night_apertureTicks = get_aperture_plot_data(night_stats)
+        night_exposureData, night_exposureTicks = get_exposure_plot_data(night_stats)
+        night_focalLengthData, night_focalLengthTicks = get_focal_length_plot_data(night_stats)
 
 	#apertureData = [35, 20, 145, 51, 151, 88, 99, 185, 75, 43];
 	#apertureTicks = ['0.0 - 1.8', '2.0 - 2.5', '2.6 - 3.2', '3.3 - 3.8', '3.9 - 4.3', '4.5 - 5.0', '5.1 - 5.9', '6.3 - 9.0', '9.5 - 14.0', '16.0 - 38.0'];
-	context = {'category':cat, 'camera_list':cameras, 'apertureData':apertureData, 'apertureTicks':apertureTicks, 'focalLengthData':focalLengthData, 'focalLengthTicks': focalLengthTicks, 'exposureData': exposureData, 'exposureTicks': exposureTicks}
+	context = {'category':cat, 'camera_list':cameras,
+                   'night_apertureData':night_apertureData,
+                   'night_apertureTicks':night_apertureTicks,
+                   'night_focalLengthData':night_focalLengthData,
+                   'night_focalLengthTicks': night_focalLengthTicks,
+                   'night_exposureData': night_exposureData,
+                   'night_exposureTicks': night_exposureTicks,
+                   'day_apertureData':day_apertureData,
+                   'day_apertureTicks':day_apertureTicks,
+                   'day_focalLengthData':day_focalLengthData,
+                   'day_focalLengthTicks': day_focalLengthTicks,
+                   'day_exposureData': day_exposureData,
+                   'day_exposureTicks': day_exposureTicks}
+
 	return render(request, 'camrec/category.html', context)

@@ -2,6 +2,7 @@ import datetime
 
 from common import *
 from fetch_photo_data import *
+from datetime import time
 from fractions import Fraction
 
 def parse_time(photo_info):
@@ -34,7 +35,7 @@ def generate_category_photo_data(photo_info = None):
     category_photo_info = defaultdict(list)
     for photo_id, photo in photo_info.iteritems():
         category = photo['category']
-        keys = ['Flash', 'Focal Length', 'Exposure', 'Exposure Mode', 'Aperture', 'White Balance', 'Date and Time (Original)']
+        keys = ['Flash', 'Focal Length', 'Exposure', 'Exposure Mode', 'Aperture', 'White Balance']
         exif = {}
         for key in keys:
             try:
@@ -42,6 +43,10 @@ def generate_category_photo_data(photo_info = None):
             except:
                 continue
 
+        parsed_time = parse_time(photo)
+        if parsed_time is not None:
+            exif['Date and Time (Original)'] = parsed_time
+            
         category_photo_info[category].append(exif)
 
     return category_photo_info
@@ -78,11 +83,46 @@ def analyze_all_photos(photos):
 
     return photos_properties, photos_stats
 
-def analyze_photos(category_photo_info, **kwargs):
+def filter_by_time(category_photo_info, time_of_day = "all_day"):
+    """Time of day can be: "all_day", "day", "night". """
+
+    time_of_day = time_of_day.lower()
+    category_photo_info_filtered = category_photo_info.copy()
+    dt_key = 'Date and Time (Original)'
+
+    for category in category_photo_info_filtered:
+        photos = category_photo_info_filtered[category]
+        for i, photo in enumerate(photos):
+            if time_of_day == "day":
+                if dt_key in photo and photo[dt_key] < time(18,00,00):
+                    photo['weight'] = 1
+                else:
+                    photo['weight'] = 0
+            elif time_of_day == "night":
+                if dt_key in photo and photo[dt_key] > time(18,00,00):
+                    photo['weight'] = 1
+                else:
+                    photo['weight'] = 0
+            else:
+                photo['weight'] = 1
+
+            photos[i] = photo
+
+        category_photo_info_filtered[category] = photos
+
+    return category_photo_info_filtered
+
+def analyze_photos(category_photo_info, time_of_day = "all_day", **kwargs):
     """Analyze photos and return a small set of useful properties and the
     distribution of values among the photos.
 
     Arguments should be of the form: category = weight."""
+
+    for category in category_photo_info:
+        for i, photo in enumerate(category):
+            category_photo_info[category][i]['weight'] = 1
+
+    category_photo_info = filter_by_time(category_photo_info, time_of_day = time_of_day)
 
     photos_stats = defaultdict(default_float_dict)
     total_weight = 0.0
@@ -99,10 +139,8 @@ def analyze_photos(category_photo_info, **kwargs):
         print "category = %s, org weight = %s, total weight = %s, new weight = %s" % (category, kwargs[category], total_weight, weight)
         for photo in category_photo_info[category]:
             for key, value in photo.iteritems():
-                photos_stats[key][value] += weight
+                photos_stats[key][value] += photo['weight'] * weight
                 
-        print photos_stats['Aperture']
-
     return photos_stats
 
 def aggregate_plot_data(data, n_bars = 6, units = ''):
