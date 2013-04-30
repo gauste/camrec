@@ -105,10 +105,11 @@ legend {
 
 .camera_list ul {
 	margin-left: -20px;
+	list-style-type:none;
 }
 
 .camera_list .camera_item {
-	width:180px;
+	width:250px;
 }
 
 .camera_list .photos_row {
