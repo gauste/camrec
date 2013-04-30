@@ -1,4 +1,5 @@
 from collections import defaultdict
+import cPickle as pickle
 
 import flickrapi
 
@@ -22,3 +23,5 @@ def default_set_dict():
 def default_int_dict():
     return defaultdict(int)
 
+def default_float_dict():
+    return defaultdict(float)

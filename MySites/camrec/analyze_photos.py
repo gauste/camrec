@@ -22,7 +22,38 @@ def parse_time(photo_info):
 
     return taken_time
 
-def analyze_photos(photos):
+def generate_category_photo_data(photo_info = None):
+    """Given a list of photos, group them by category and store only a
+    small set of key-value pairs."""
+
+    if photo_info is None:
+        f = open('photos_all_1.dat', 'r')
+        photo_info = pickle.load(f)
+        f.close()
+
+    category_photo_info = defaultdict(list)
+    for photo_id, photo in photo_info.iteritems():
+        category = photo['category']
+        keys = ['Flash', 'Focal Length', 'Exposure', 'Exposure Mode', 'Aperture', 'White Balance', 'Date and Time (Original)']
+        exif = {}
+        for key in keys:
+            try:
+                exif[key] = photo['exif'][key]
+            except:
+                continue
+
+        category_photo_info[category].append(exif)
+
+    return category_photo_info
+
+def load_category_photo_data(fname = 'category_photo_map.dat'):
+    f = open(fname, 'r')
+    category_photo_data = pickle.load(f)
+    f.close()
+
+    return category_photo_data
+
+def analyze_all_photos(photos):
     """Analyze photos and return a small set of useful properties and the
     distribution of values among the photos."""
 
@@ -46,6 +77,25 @@ def analyze_photos(photos):
                 photos_stats[key][value] += 1
 
     return photos_properties, photos_stats
+
+def analyze_photos(category_photo_info, **kwargs):
+    """Analyze photos and return a small set of useful properties and the
+    distribution of values among the photos.
+
+    Arguments should be of the form: category = weight."""
+
+    photos_stats = defaultdict(default_float_dict)
+    total_weight = 0.0
+    for category in kwargs:
+        total_weight += kwargs[category]
+
+    for category in kwargs:
+        weight = kwargs[category] * 1.0 / total_weight
+        for photo in category_photo_info[category]:
+            for key, value in photo.iteritems():
+                photos_stats[key][value] += weight
+                
+    return photos_stats
 
 def aggregate_plot_data(data, n_bars = 6, units = ''):
     # Data is in the form: [(value, number of photos with this value), ...]
@@ -83,7 +133,7 @@ def aggregate_plot_data(data, n_bars = 6, units = ''):
 def get_focal_length_plot_data(photos_stats, n_bars = 7):
     focal_length_stats = photos_stats['Focal Length']
     numeric_focal_length_stats = { float(x.split(' ')[0]):
-                                   focal_length_stats[x] for x in focal_length_stats }
+                                   int(focal_length_stats[x]) for x in focal_length_stats }
     
     sorted_focal_lengths = sorted(numeric_focal_length_stats.items())
     bars, ticks = aggregate_plot_data(sorted_focal_lengths, n_bars = n_bars, units = 'mm')
@@ -92,7 +142,7 @@ def get_focal_length_plot_data(photos_stats, n_bars = 7):
 
 def get_exposure_plot_data(photos_stats, n_bars = 7):
     exposure_stats = photos_stats['Exposure']
-    numeric_exposure_stats = {Fraction(x): exposure_stats[x] for x in exposure_stats}
+    numeric_exposure_stats = {Fraction(x): int(exposure_stats[x]) for x in exposure_stats}
     sorted_exposures = sorted(numeric_exposure_stats.items())
     
     bars,ticks = aggregate_plot_data(sorted_exposures, n_bars = n_bars, units = '')
@@ -101,8 +151,8 @@ def get_exposure_plot_data(photos_stats, n_bars = 7):
 
 def get_aperture_plot_data(photos_stats, n_bars = 7):
     aperture_stats = photos_stats['Aperture']
-    numeric_aperture_stats = { float(x.split(' ')[0]):
-                                   aperture_stats[x] for x in aperture_stats }
+    numeric_aperture_stats = { float(Fraction(x.split(' ')[0])):
+                                   int(aperture_stats[x]) for x in aperture_stats }
     
     sorted_apertures = sorted(numeric_aperture_stats.items())
     bars, ticks = aggregate_plot_data(sorted_apertures, n_bars = n_bars, units = '')
