@@ -13,14 +13,7 @@ a:link, a:visited, a:hover, a:active {
 	padding: 10px 10px 10px 30px;
 }
 
-.cat_heading {
-	font-family: Arial;
-	font-size: 14pt;
-	font-weight: bold;
-	color: #0A5D8F;
-	text-transform:capitalize;
-}
-
+/* Index page */
 .cat_list li, .camera_list li {
 	text-transform:capitalize;
 	list-style-type: none;	
@@ -44,6 +37,40 @@ a:link, a:visited, a:hover, a:active {
 	width:100px;
 }
 
+.cat_slider {
+	text-transform:capitalize;
+	padding-bottom:10px;
+}
+
+.cat_slider input {
+	vertical-align:baseline;
+	padding-bottom:5px;
+}
+
+.cat_slider_label {
+	border:0px;
+	color:#f6931f;
+	font-weight:bold;
+	width:40px;
+}
+
+.slider {
+	width:300px;
+}
+
+.weighted_cat_list_submitted {
+
+}
+
+/* Category page */
+.cat_heading {
+	font-family: Arial;
+	font-size: 14pt;
+	font-weight: bold;
+	color: #0A5D8F;
+	text-transform:capitalize;
+}
+
 .camera_list ul {
 	margin-left: -20px;
 }
@@ -65,3 +92,9 @@ a:link, a:visited, a:hover, a:active {
 .camera_list .cam_price {
 	color: orange;
 }
+
+.camera_settings_chart {
+	height:400px; 
+	width:400px;
+}
+

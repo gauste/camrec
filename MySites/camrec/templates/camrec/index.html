@@ -4,28 +4,60 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	{% load staticfiles %}
 	<link rel="stylesheet" type="text/css" href='{% static "camrec/style.css" %}'>
+	<link rel="stylesheet" type="text/css" href='{% static "camrec/jquery-ui.css" %}'>
+	<script type="text/javascript" src='{% static "camrec/scripts.js" %}'></script>
+	<script type="text/javascript" src='{% static "camrec/jquery-1.9.1.js" %}'></script>
+	<script type="text/javascript" src='{% static "camrec/jquery-ui.js" %}'></script>
+	
+	<script>
+	  $(function() {
+		$(".slider").slider({
+		  range: "min", min: 0, max: 100, value: 0,
+		  slide: function(event, ui) {
+			$(this).prev().val(ui.value);
+		  }
+		});
+		$(".cat_slider_label").val($(".cat_slider_label").next().slider("value"));
+	  });
+	</script>
 </head>
 <body>
+<form method="post">{% csrf_token %}
 	<div>
 		<a href="/camrec/"><img src='{% static "camrec/CamRec.jpg" %}' alt="CamRec" border="0"/></a>
 	</div>
 	<div class="content">	
+		<div class="weighted_cat_list">
+			{% if category_list %}
+				{% for item in category_list %}
+				<div class="cat_slider">
+					{{item.category}}: <input type="text" name="{{item.category}}_amount" class="cat_slider_label"/>
+					<div id="{{item.category}}_slider" class="slider"></div>
+				</div>	
+				{% endfor %}	
+			{% else %}
+				<p>No categories are available.</p>	
+			{% endif %}
+			<input type="submit" value="Submit" class="weighted_cat_list_submitted"/>
+		</div>
+		
 		<p>Browse the following genres for information on the top cameras and more:</p>
 		<div class="cat_list">
-		{% if category_list %}
-			<ul>
-			{% for item in category_list %}
-				<li><img src='{% static "camrec/arrow-th.png" %}' border="0" width="16px" />
-					<span><a href="/camrec/category/{{item.category}}">{{item.category}}</a></span>
-					{{item.cameras}}
-				</li>
-			{% endfor %}
-			</ul>
-		{% else %}
-			<p>No categories are available.</p>
-		{% endif %}
+			{% if category_list %}
+				<ul>
+				{% for item in category_list %}
+					<li><img src='{% static "camrec/arrow-th.png" %}' border="0" width="16px" />
+						<span><a href="/camrec/category/{{item.category}}">{{item.category}}</a></span>
+						{{item.cameras}}
+					</li>
+				{% endfor %}
+				</ul>
+			{% else %}
+				<p>No categories are available.</p>
+			{% endif %}
 		</div>
 	</div>
+</form>
 </body>
 </html>
 
