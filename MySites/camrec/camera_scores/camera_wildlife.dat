@@ -1,0 +1,345 @@
+ccollections
+defaultdict
+p1
+(c__builtin__
+float
+p2
+tRp3
+S'Canon EOS Digital Rebel XTi'
+p4
+cnumpy.core.multiarray
+scalar
+p5
+(cnumpy
+dtype
+p6
+(S'f8'
+I0
+I1
+tRp7
+(I3
+S'<'
+NNNI-1
+I-1
+I0
+tbS'\x81\xeao\xe5\x80\xdbO?'
+tRp8
+sS'Nikon D80'
+p9
+g5
+(g7
+S'O)\x17\xa5s\xccw?'
+tRp10
+sS'Canon PowerShot A610'
+p11
+g5
+(g7
+S'\xb6\xd0./\xab\xc6\x80?'
+tRp12
+sS'Canon EOS 30D'
+p13
+g5
+(g7
+S'B\xfc|\x01%I\x8e?'
+tRp14
+sS'Nikon D90'
+p15
+g5
+(g7
+S'\x01K\xa9v\xff\xc5\x87?'
+tRp16
+sS'Nikon D3'
+p17
+g5
+(g7
+S'\x1a5\x90\x0c_\xec\x97?'
+tRp18
+sS'Nikon D3S'
+p19
+g5
+(g7
+S'uj\x02\x83\xce\x86#?'
+tRp20
+sS'Nikon D40X'
+p21
+g5
+(g7
+S'\x91\x89\xbb\x0b|T$?'
+tRp22
+sS'Nikon D700'
+p23
+g5
+(g7
+S'\xa9\r\xea*DHh?'
+tRp24
+sS'Nikon D7000'
+p25
+g5
+(g7
+S'ZI\xac\xd0[\xda@?'
+tRp26
+sS'Canon PowerShot G11'
+p27
+g5
+(g7
+S'\x9ek>\x949^F?'
+tRp28
+sS'Canon PowerShot G10'
+p29
+g5
+(g7
+S'\x84\x91\xea\xf7 \xd1@?'
+tRp30
+sS'Canon PowerShot G12'
+p31
+g5
+(g7
+S'\xc2\xd3A\xf8\xe1\xc5@?'
+tRp32
+sS'Fujifilm FinePix S5500'
+p33
+g5
+(g7
+S'L\x9e\xff)3\x96L?'
+tRp34
+sS'Panasonic DMC-FZ8'
+p35
+g5
+(g7
+S'$\x16\x0cl\xb09\x84?'
+tRp36
+sS'Canon EOS Digital Rebel XS'
+p37
+g5
+(g7
+S'\xb3\xa0\n#q-\x1a?'
+tRp38
+sS'Nikon D3100'
+p39
+g5
+(g7
+S'YN\x99\x11\xba~>?'
+tRp40
+sS'Sony DSLR-A850'
+p41
+g5
+(g7
+S'\x8ev/\xcd\xbc\xd1Z?'
+tRp42
+sS'Nikon D60'
+p43
+g5
+(g7
+S'\xcb\xd3\x17\x9b\xa0\xf5<?'
+tRp44
+sS'Panasonic DMC-FX9'
+p45
+g5
+(g7
+S'\x12m\x1eQ\x84x:?'
+tRp46
+sS'Nikon D3000'
+p47
+g5
+(g7
+S'\x97BC\x94J\xb8B?'
+tRp48
+sS'Canon EOS 60D'
+p49
+g5
+(g7
+S'j\xf3\xcfE\xd5\xa7_?'
+tRp50
+sS'Canon EOS REBEL T2i'
+p51
+g5
+(g7
+S'=\xea\x8e\x84\xb7cG?'
+tRp52
+sS'Canon PowerShot A650 IS'
+p53
+g5
+(g7
+S'K\xe3\xeb\xf5/\xd0P?'
+tRp54
+sS'Canon EOS Digital Rebel XT'
+p55
+g5
+(g7
+S'[\xbe\xf7\xf4\xe9\xa6\x84?'
+tRp56
+sS'Panasonic DMC-LX3'
+p57
+g5
+(g7
+S'\xc1\x9c\x10\x1c\xd2\x88f?'
+tRp58
+sS'Canon EOS-1D Mark IV'
+p59
+g5
+(g7
+S'\x86\xc0\x07\x8e\xfa\xe8\x89?'
+tRp60
+sS'Nikon Coolpix L18'
+p61
+g5
+(g7
+S'\x01L\x04Z\xd4d5?'
+tRp62
+sS'Pentax K10D'
+p63
+g5
+(g7
+S')d+\x8b\x14\xd1F?'
+tRp64
+sS'Canon EOS 40D'
+p65
+g5
+(g7
+S'\xc3\xc6\xcel\x8d\x84\x93?'
+tRp66
+sS'Nikon D200'
+p67
+g5
+(g7
+S'\xcb\xa9\x140\x85\xaf\x8b?'
+tRp68
+sS'Nikon D300S'
+p69
+g5
+(g7
+S'\xec\x14;\xc51pg?'
+tRp70
+sS'Canon EOS Digital Rebel XSi'
+p71
+g5
+(g7
+S'\x00\x1e\x93E^}r?'
+tRp72
+sS'Nikon D300'
+p73
+g5
+(g7
+S'B\xd7v\x86\xe4\xed\x9a?'
+tRp74
+sS'Nikon D70s'
+p75
+g5
+(g7
+S'\xe2\xef\x8eK!\xcd{?'
+tRp76
+sS'Panasonic DMC-FZ28'
+p77
+g5
+(g7
+S'\x81*71{\xa6J?'
+tRp78
+sS'Nikon D40'
+p79
+g5
+(g7
+S'\xf4H\xa7\x0f\xc6\xce`?'
+tRp80
+sS'Pentax K-7'
+p81
+g5
+(g7
+S']\xcc\xaf\x9a\xbc\xdb"?'
+tRp82
+sS'Fujifilm FinePix S200EXR'
+p83
+g5
+(g7
+S'2\x91I,9\xfbB?'
+tRp84
+sS'Canon EOS 10D'
+p85
+g5
+(g7
+S"\xefc\xf3'\x19UL?"
+tRp86
+sS'Canon EOS 50D'
+p87
+g5
+(g7
+S'\xb7;\x97rT\x12]?'
+tRp88
+sS'Nikon Coolpix S3000'
+p89
+g5
+(g7
+S'\x91\x89\xbb\x0b|T$?'
+tRp90
+sS'Nikon D50'
+p91
+g5
+(g7
+S'\x94<\x0f\x14\x157}?'
+tRp92
+sS'Canon EOS 5D'
+p93
+g5
+(g7
+S'lK\xa3\x9dq\xf3q?'
+tRp94
+sS'Fujifilm FinePix E550'
+p95
+g5
+(g7
+S'GH\x05\xa4\x04\xb5N?'
+tRp96
+sS'Pentax *ist DL'
+p97
+g5
+(g7
+S' Q\xd5\x83C\xf46?'
+tRp98
+sS'Nikon D70'
+p99
+g5
+(g7
+S'\x83\xa79\x9f\x85\xc9w?'
+tRp100
+sS'Canon EOS 5D Mark III'
+p101
+g5
+(g7
+S'\xbb\x8d\x9cN\x85\x90b?'
+tRp102
+sS'Canon EOS 7D'
+p103
+g5
+(g7
+S'\xb5\n^\xde\x85\xf5\x9f?'
+tRp104
+sS'Canon EOS 20D'
+p105
+g5
+(g7
+S'\xb3\x07lkB\x8b\x96?'
+tRp106
+sS'Canon EOS 5D Mark II'
+p107
+g5
+(g7
+S'\x02K\xf6\xfa\x08\xdd\x9c?'
+tRp108
+sS'Canon EOS REBEL T1i'
+p109
+g5
+(g7
+S'K\xe3\xeb\xf5/\xd0`?'
+tRp110
+sS'Sony DSC-HX1'
+p111
+g5
+(g7
+S'_\xe6\xaa#\xe7\xa1\x14?'
+tRp112
+sS'Canon PowerShot G6'
+p113
+g5
+(g7
+S'\x91\x89\xbb\x0b|T4?'
+tRp114
+s.
