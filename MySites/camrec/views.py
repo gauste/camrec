@@ -23,18 +23,6 @@ def index(request):
                 top_cameras = get_top_cameras(n = 3)
                 top_cameras_dict = [{'category':cat, 'cameras': ', '.join([camera[0] for camera in  top_cameras[cat]])} for cat in top_cameras]
                 top_cameras_dict = sorted(top_cameras_dict, key = lambda x: x['category'])
-		categories = [{'category':'architecture','cameras':'Nikon D600'}, 
-					  {'category':'art','cameras':'Powershot G3'},
-					  {'category':'car','cameras':'Powershot G3'},
-					  {'category':'cat','cameras':'Powershot G3'},
-					  {'category':'food','cameras':'Powershot G3'},
-					  {'category':'landscape','cameras':'Powershot G3'},
-					  {'category':'nature','cameras':'Powershot G3'},
-					  {'category':'people','cameras':'Powershot G3'},
-					  {'category':'pet','cameras':'Powershot G3'},
-					  {'category':'technology','cameras':'Powershot G3'},
-					  {'category':'wildlife','cameras':'Canon Mark 5D'}
-					  ]
 		context = {'category_list': top_cameras_dict}
 		return render(request, 'camrec/index.html', context) 
 
