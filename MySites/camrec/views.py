@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, QueryDict
 from analyze_photos import *
 from interface import *
+import numpy.random as random
 
 def index(request):
 	if request.method == 'POST':
@@ -45,22 +46,22 @@ def category(request, cat):
 
 	all_zero = True
 	if len(q) != 1:
-			for category in q:
-					try:
-							weight = int(q[category])
-							if weight != 0:
-									all_zero = False
-					except:
-							continue
+                for category in q:
+                        try:
+                                weight = int(q[category])
+                                if weight != 0:
+                                        all_zero = False
+                        except:
+                                continue
 	else:
-			all_zero = False
-			category_weights = {q.keys()[0]: 1}
+                all_zero = False
+                category_weights = {q.keys()[0]: 1}
 
 	if all_zero:
-			return HttpResponseRedirect('/camrec/')
+                return HttpResponseRedirect('/camrec/')
 
 	if len(q) > 1:
-			category_weights = {category: float(q[category]) for category in q}
+                category_weights = {category: float(q[category]) for category in q}
 
 	top_cameras = get_top_cameras(n=15)
 	top_cameras = weighted_camera_scores(top_cameras, **category_weights)
@@ -72,7 +73,45 @@ def category(request, cat):
 		else:
 			top_camera_prices.append('N/A')
 	
-	cameras = [{'camera': top_cameras[i][0], 'price': '%s' % (top_camera_prices[i]), 'photos':[]} for i in range(len(top_cameras))]
+        f = open('interface_photos.dat', 'r')
+        interface_photos = pickle.load(f)
+        # Convert to {category: {camera: photos, ...}, ...}
+        f.close()
+        interface_photos = {category: {camera[0]: photos for camera, photos in interface_photos[category].iteritems()} for category in interface_photos}
+
+        categories = filter(lambda c: category_weights[c] > 0, category_weights.keys())
+        category_weight_thresholds = []
+        weight_threshold = 0.0
+        for category in categories:
+                weight_threshold += category_weights[category]
+                category_weight_thresholds.append(weight_threshold)
+        max_weight_threshold = weight_threshold
+
+        photos = defaultdict(list)
+        photos_per_camera = 3
+        for camera, score in top_cameras[:10]:
+                photos[camera] = []
+                for i in range(photos_per_camera):
+                        rnd_num = random.rand() * max_weight_threshold
+                        for j in range(len(category_weight_thresholds)):
+                                if rnd_num < category_weight_thresholds[j]:
+                                        category = categories[j]
+                                        break
+
+                        try:
+                                photos_from_camera = interface_photos[category][camera]
+                        except KeyError:
+                                break
+
+                        if len(photos_from_camera) == 0:
+                                continue
+
+                        photo_index = random.randint(0, len(photos_from_camera))
+                        photos[camera].append(photos_from_camera[photo_index])
+                        interface_photos[category][camera].remove(photos_from_camera[photo_index])
+
+
+	cameras = [{'camera': top_cameras[i][0], 'price': '%s' % (top_camera_prices[i]), 'photos':photos[top_cameras[i][0]]} for i in range(len(top_cameras[:10]))]
 
 	category_photo_data = load_category_photo_data()
 	day_stats = analyze_photos(category_photo_data, time_of_day = "day", **category_weights)
