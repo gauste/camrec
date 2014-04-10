@@ -3,8 +3,8 @@ from fetch_camera_data import *
 import cPickle as pickle
 
 def lookup_price(searchTerm):
-	AWS_KEY = 'AKIAIILUNE5IYH7BDF2A'
-	SECRET_KEY = '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'
+	AWS_KEY = ''
+	SECRET_KEY = ''
 	ASSOC_TAG = 'camerarecomm-20'
 	
 	api = API(AWS_KEY, SECRET_KEY, 'us', ASSOC_TAG)
